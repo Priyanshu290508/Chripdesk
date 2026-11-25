@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="theme.css">
 
   <script>
-    (function() {
+    (function () {
       try {
         var saved = localStorage.getItem('chirpdesk_theme');
         if (saved === 'dark') {
@@ -30,7 +30,7 @@
           document.documentElement.classList.remove('dark');
           document.documentElement.setAttribute('data-theme', 'light');
         }
-      } catch (e) {}
+      } catch (e) { }
     })();
   </script>
 
