@@ -16,7 +16,7 @@
   <!-- Supabase JS CDN (Official CDN for Supabase client) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- Tailwind CSS CDN with Mint Slate Theme & Dark-Mode Variant -->
+  <!-- Tailwind CSS CDN with Modern Minimal Theme & Dark-Mode Variant -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -29,16 +29,16 @@
             'card-border': 'var(--border)',
             sidebar: 'var(--sidebar)',
             slate: {
-              accent: '#5F7380',
-              hover: '#4E616E',
-              subtle: '#E2E6E8',
-              deep: '#3B4952'
+              accent: '#3B82F6',
+              hover: '#2563EB',
+              subtle: '#E0F2FE',
+              deep: '#1D4ED8'
             },
             tan: {
-              accent: '#A89070',
-              hover: '#957E60',
-              subtle: '#EFEAE2',
-              deep: '#78644A'
+              accent: '#0284C7',
+              hover: '#0369A1',
+              subtle: '#E0F2FE',
+              deep: '#075985'
             },
             charcoal: {
               DEFAULT: 'var(--charcoal)',
@@ -46,29 +46,29 @@
             },
             muted: {
               DEFAULT: 'var(--muted)',
-              light: '#8F9490',
-              subtle: '#B5BAB7'
+              light: '#94A3B8',
+              subtle: '#CBD5E1'
             },
             status: {
-              success: '#5E8B6E',
-              warning: '#B8893F',
-              danger: '#A5524A'
+              success: '#10B981',
+              warning: '#F59E0B',
+              danger: '#EF4444'
             },
-            offwhite: '#F2F4F1'
+            offwhite: 'var(--offwhite)'
           },
           fontFamily: {
             sans: ['"Plus Jakarta Sans"', '"Outfit"', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'monospace']
           },
           borderRadius: {
-            'brand': '18px',
-            'brand-sm': '14px',
-            'brand-lg': '22px'
+            'brand': '16px',
+            'brand-sm': '12px',
+            'brand-lg': '20px'
           },
           boxShadow: {
-            'soft': '0 4px 20px -2px rgba(43, 45, 46, 0.05)',
-            'card': '0 8px 30px -4px rgba(43, 45, 46, 0.07)',
-            'float': '0 12px 36px -6px rgba(43, 45, 46, 0.12)'
+            'soft': '0 2px 12px -2px rgba(15, 23, 42, 0.04)',
+            'card': '0 4px 20px -2px rgba(15, 23, 42, 0.06)',
+            'float': '0 10px 30px -4px rgba(15, 23, 42, 0.10)'
           }
         }
       }
@@ -77,29 +77,31 @@
 
   <style>
     :root {
-      --canvas: #DCDFDA;
-      --card: #E8EAE6;
-      --border: #C9CCC6;
-      --sidebar: #D3D6D1;
-      --primary: #5F7380;
-      --tan: #A89070;
-      --charcoal: #2B2D2E;
-      --charcoal-soft: #383B3C;
-      --muted: #727875;
-      --offwhite: #F2F4F1;
+      --canvas: #F9FAFB;
+      --card: #FFFFFF;
+      --border: #E5E7EB;
+      --sidebar: #F3F4F6;
+      --primary: #3B82F6;
+      --primary-hover: #2563EB;
+      --tan: #0284C7;
+      --charcoal: #1E293B;
+      --charcoal-soft: #334155;
+      --muted: #64748B;
+      --offwhite: #FFFFFF;
     }
 
     .dark {
-      --canvas: #1A1C1B;
-      --card: #232625;
-      --border: #353937;
-      --sidebar: #1E2120;
-      --primary: #748B99;
-      --tan: #BD9F7E;
-      --charcoal: #E5E8E6;
-      --charcoal-soft: #2E3230;
-      --muted: #8E9491;
-      --offwhite: #141615;
+      --canvas: #0B0F19;
+      --card: #111827;
+      --border: #1F2937;
+      --sidebar: #0F172A;
+      --primary: #3B82F6;
+      --primary-hover: #60A5FA;
+      --tan: #38BDF8;
+      --charcoal: #F9FAFB;
+      --charcoal-soft: #94A3B8;
+      --muted: #9CA3AF;
+      --offwhite: #0B0F19;
     }
 
     body {
@@ -622,19 +624,19 @@
 
               <!-- Interactive Multi-Line SVG -->
               <svg id="overviewChartSvg" class="w-full h-44 overflow-visible" viewBox="0 0 600 160" preserveAspectRatio="none">
-                <!-- Sent (Slate) -->
-                <path d="M 0 130 Q 100 90, 200 70 T 400 30 T 600 10" fill="none" stroke="#5F7380" stroke-width="3" stroke-linecap="round"/>
-                <!-- Delivered (Sage) -->
-                <path d="M 0 132 Q 100 93, 200 75 T 400 34 T 600 14" fill="none" stroke="#5E8B6E" stroke-width="2.5" stroke-linecap="round"/>
-                <!-- Read (Tan) -->
-                <path d="M 0 142 Q 100 110, 200 90 T 400 48 T 600 30" fill="none" stroke="#A89070" stroke-width="2.5" stroke-linecap="round"/>
-                <!-- Failed (Muted Red) -->
-                <path d="M 0 156 Q 100 155, 200 157 T 400 154 T 600 152" fill="none" stroke="#A5524A" stroke-width="2" stroke-linecap="round"/>
+                <!-- Sent (Primary Blue) -->
+                <path d="M 0 130 Q 100 90, 200 70 T 400 30 T 600 10" fill="none" stroke="#3B82F6" stroke-width="3" stroke-linecap="round"/>
+                <!-- Delivered (Emerald) -->
+                <path d="M 0 132 Q 100 93, 200 75 T 400 34 T 600 14" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"/>
+                <!-- Read (Sky Blue) -->
+                <path d="M 0 142 Q 100 110, 200 90 T 400 48 T 600 30" fill="none" stroke="#0284C7" stroke-width="2.5" stroke-linecap="round"/>
+                <!-- Failed (Red) -->
+                <path d="M 0 156 Q 100 155, 200 157 T 400 154 T 600 152" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/>
 
                 <!-- Interactive Data points (Hoverable) -->
-                <circle cx="200" cy="70" r="4" fill="#5F7380" class="cursor-pointer hover:r-6 transition-all" data-info="10 Nov: 890 Sent"/>
-                <circle cx="400" cy="30" r="4" fill="#5F7380" class="cursor-pointer hover:r-6 transition-all" data-info="20 Nov: 1,820 Sent"/>
-                <circle cx="600" cy="10" r="4" fill="#5F7380" class="cursor-pointer hover:r-6 transition-all" data-info="28 Nov: 2,150 Sent"/>
+                <circle cx="200" cy="70" r="4" fill="#3B82F6" class="cursor-pointer hover:r-6 transition-all" data-info="10 Nov: 890 Sent"/>
+                <circle cx="400" cy="30" r="4" fill="#3B82F6" class="cursor-pointer hover:r-6 transition-all" data-info="20 Nov: 1,820 Sent"/>
+                <circle cx="600" cy="10" r="4" fill="#3B82F6" class="cursor-pointer hover:r-6 transition-all" data-info="28 Nov: 2,150 Sent"/>
               </svg>
 
               <!-- X-Axis Labels -->

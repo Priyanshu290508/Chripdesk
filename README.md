@@ -4,7 +4,7 @@
 ![Gemini AI](https://img.shields.io/badge/AI-Gemini%202.5%20Flash-4285F4?style=flat-square&logo=google)
 ![Supabase](https://img.shields.io/badge/Database-Supabase%20Realtime-3ECF8E?style=flat-square&logo=supabase)
 ![WhatsApp Cloud API](https://img.shields.io/badge/Messaging-Meta%20Cloud%20API-25D366?style=flat-square&logo=whatsapp)
-![Tailwind CSS](https://img.shields.io/badge/UI-Mint%20Slate%20Dashboard-06B6D4?style=flat-square&logo=tailwindcss)
+![Tailwind CSS](https://img.shields.io/badge/UI-Modern%20Minimal%20Dashboard-3B82F6?style=flat-square&logo=tailwindcss)
 
 **Chirpdesk** is a full-stack, multi-tenant **WhatsApp AI Customer Support & CRM SaaS platform** built directly on top of the **Meta WhatsApp Cloud API**, **Python FastAPI**, **Google Gemini (`gemini-2.5-flash`)**, and **Supabase**. 
 
@@ -44,7 +44,7 @@ When a customer sends a WhatsApp message to the connected business number, Chirp
                                                           v
 +-----------------+    Realtime WebSocket      +----------------------+
 |    Chirpdesk    | <------------------------- |   Python FastAPI     |
-| Mint Slate UI   |                            |   Backend (:8000)    |
+| Modern Minimal  |                            |   Backend (:8000)    |
 +-----------------+                            +----+------------+----+
                                                     |            |
                                      Generate Reply |            | Log Chat
@@ -59,7 +59,7 @@ When a customer sends a WhatsApp message to the connected business number, Chirp
 2. **Contact & Workspace Resolution:** FastAPI maps the incoming payload to the active workspace (e.g., `ws-sharma-jewellers`), finds or creates the sender in the Supabase `contacts` table, and stores the message with `sender_type = "customer"`.
 3. **AI Response Generation:** FastAPI sends the customer's query along with the workspace's business context to **Google Gemini (`gemini-2.5-flash`)** to generate a concise, helpful reply.
 4. **WhatsApp Dispatch & Logging:** FastAPI sends the generated reply back to the user via the **Meta Graph API** (`/messages` endpoint) and logs it in Supabase with `sender_type = "ai"`.
-5. **Live Dashboard Update:** **Supabase Realtime** broadcasts the new database rows immediately to the **Mint Slate Frontend**, updating the Live Team Inbox in real time.
+5. **Live Dashboard Update:** **Supabase Realtime** broadcasts the new database rows immediately to the **Modern Minimal Frontend**, updating the Live Team Inbox in real time.
 
 ---
 
@@ -67,7 +67,7 @@ When a customer sends a WhatsApp message to the connected business number, Chirp
 
 | Layer | Technology | Role in Chirpdesk |
 | :--- | :--- | :--- |
-| **Frontend UI** | HTML5, Tailwind CSS, Vanilla JS | Clean **Mint Slate** multi-tenant dashboard with 4 core views: Live Inbox, Contacts, Broadcast Campaigns, and Settings. |
+| **Frontend UI** | HTML5, Tailwind CSS, Vanilla JS | Clean **Modern Minimal** multi-tenant dashboard with 4 core views: Live Inbox, Contacts, Broadcast Campaigns, and Settings. |
 | **Backend Server** | Python, FastAPI, Uvicorn | Handles Meta webhook verification (`GET /webhook`), incoming message processing (`POST /webhook`), AI orchestration, and Graph API calls. |
 | **AI Engine** | Google Gemini (`gemini-2.5-flash`) | Generates fast, context-aware customer support replies in Hinglish and English via the Google AI Studio API. |
 | **Database & Realtime** | Supabase (PostgreSQL) | Stores multi-tenant data across a 9-table UUID schema (`workspaces`, `contacts`, `messages`, `campaigns`, etc.) with Realtime enabled on `messages`. |

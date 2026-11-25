@@ -27,7 +27,7 @@ window.CHIRPDESK_MOCK_DATA = {
       gstin: "08AABCS1429B1Z8",
       defaultLanguage: "Hinglish",
       healthStatus: "All 3 services running normally • Last sync 2m ago",
-      themeAccent: "#5F7380"
+      themeAccent: "#3B82F6"
     },
     {
       id: "ws-gupta-general",
@@ -49,7 +49,7 @@ window.CHIRPDESK_MOCK_DATA = {
       gstin: "23AAGFG9876C1Z2",
       defaultLanguage: "Hinglish",
       healthStatus: "WhatsApp Webhook Active • 0 dropped events",
-      themeAccent: "#A89070"
+      themeAccent: "#0284C7"
     }
   ],
 
