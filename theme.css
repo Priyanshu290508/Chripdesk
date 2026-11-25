@@ -1,0 +1,281 @@
+/**
+ * Chirpdesk Shared Design System: LIGHT "Blue + Ink" (Default) with Optional Dark Navy
+ * Referenced by index.html, dashboard.html, login.html
+ */
+
+:root,
+[data-theme="light"] {
+  /* Surfaces */
+  --canvas: #F8FAFC;
+  --card: #FFFFFF;
+  --card-border: #E2E8F0;
+  --sidebar: #FFFFFF;
+  --sidebar-border: #E2E8F0;
+  --topbar: #FFFFFF;
+  --topbar-border: #E2E8F0;
+  --panel: #FFFFFF;
+  --panel-muted: #F8FAFC;
+
+  /* Primary Blue Accent */
+  --primary: #3B82F6;
+  --primary-hover: #2563EB;
+  --primary-deep: #1D4ED8;
+  --primary-light: #EFF6FF;
+  --primary-border: #BFDBFE;
+
+  /* Ink & Typography */
+  --text-heading: #0F172A;
+  --text-body: #334155;
+  --text-muted: #64748B;
+  --text-placeholder: #94A3B8;
+
+  /* Legacy & Semantic Aliases */
+  --border: #E2E8F0;
+  --charcoal: #0F172A;
+  --charcoal-soft: #334155;
+  --muted: #64748B;
+  --offwhite: #FFFFFF;
+
+  /* Dark CTA Buttons & Banner */
+  --dark-btn-bg: #1E293B;
+  --dark-btn-hover: #0F172A;
+  --dark-btn-text: #FFFFFF;
+  --banner-bg: #1E293B;
+  --banner-text: #FFFFFF;
+
+  /* Status Colors */
+  --success: #10B981;
+  --success-bg: #ECFDF5;
+  --success-border: #A7F3D0;
+  --success-text: #065F46;
+
+  --info: #0284C7;
+  --info-bg: #F0F9FF;
+  --info-border: #BAE6FD;
+  --info-text: #075985;
+
+  --warning: #F59E0B;
+  --warning-bg: #FFFBEB;
+  --warning-border: #FDE68A;
+  --warning-text: #92400E;
+
+  --danger: #EF4444;
+  --danger-bg: #FEF2F2;
+  --danger-border: #FECACA;
+  --danger-text: #991B1B;
+
+  /* Chart Series */
+  --chart-sent: #3B82F6;
+  --chart-delivered: #10B981;
+  --chart-read: #0284C7;
+  --chart-failed: #EF4444;
+  --chart-grid: #E2E8F0;
+
+  /* Elevation Shadows & Radius */
+  --radius-card: 16px;
+  --radius-sm: 10px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+  --shadow-soft: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-card: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+  --shadow-float: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+
+  /* Chat Bubbles */
+  --chat-customer-bg: #FFFFFF;
+  --chat-customer-border: #E2E8F0;
+  --chat-customer-text: #0F172A;
+  --chat-staff-bg: #EFF6FF;
+  --chat-staff-border: #BFDBFE;
+  --chat-staff-text: #1E3A8A;
+}
+
+/* Optional Dark Mode (Navy & Slate) */
+.dark,
+[data-theme="dark"] {
+  --canvas: #0B1220;
+  --card: #111827;
+  --card-border: #1F2937;
+  --sidebar: #0D1526;
+  --sidebar-border: #1E293B;
+  --topbar: #0D1526;
+  --topbar-border: #1E293B;
+  --panel: #111827;
+  --panel-muted: #1E293B;
+
+  --primary: #3B82F6;
+  --primary-hover: #60A5FA;
+  --primary-deep: #2563EB;
+  --primary-light: #172554;
+  --primary-border: #1E40AF;
+
+  --text-heading: #F8FAFC;
+  --text-body: #E2E8F0;
+  --text-muted: #94A3B8;
+  --text-placeholder: #64748B;
+
+  --border: #1F2937;
+  --charcoal: #F8FAFC;
+  --charcoal-soft: #E2E8F0;
+  --muted: #94A3B8;
+  --offwhite: #111827;
+
+  --dark-btn-bg: #3B82F6;
+  --dark-btn-hover: #2563EB;
+  --dark-btn-text: #FFFFFF;
+  --banner-bg: #0F172A;
+  --banner-text: #F8FAFC;
+
+  --success: #10B981;
+  --success-bg: #064E3B;
+  --success-border: #047857;
+  --success-text: #A7F3D0;
+
+  --info: #38BDF8;
+  --info-bg: #0C4A6E;
+  --info-border: #0369A1;
+  --info-text: #BAE6FD;
+
+  --warning: #F59E0B;
+  --warning-bg: #78350F;
+  --warning-border: #B45309;
+  --warning-text: #FDE68A;
+
+  --danger: #EF4444;
+  --danger-bg: #7F1D1D;
+  --danger-border: #B91C1C;
+  --danger-text: #FECACA;
+
+  --chart-sent: #3B82F6;
+  --chart-delivered: #10B981;
+  --chart-read: #38BDF8;
+  --chart-failed: #EF4444;
+  --chart-grid: #1F2937;
+
+  --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-float: 0 10px 25px -5px rgba(0, 0, 0, 0.6);
+
+  --chat-customer-bg: #1E293B;
+  --chat-customer-border: #334155;
+  --chat-customer-text: #F8FAFC;
+  --chat-staff-bg: #1E3A8A;
+  --chat-staff-border: #2563EB;
+  --chat-staff-text: #EFF6FF;
+}
+
+body {
+  background-color: var(--canvas);
+  color: var(--text-body);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Sidebar Nav Items */
+.nav-item {
+  color: var(--text-body);
+  transition: all 0.15s ease-in-out;
+}
+.nav-item:hover {
+  background-color: #F1F5F9;
+  color: var(--text-heading);
+}
+.dark .nav-item:hover {
+  background-color: #1E293B;
+  color: #FFFFFF;
+}
+.nav-item.active {
+  background-color: var(--primary-light) !important;
+  color: var(--primary) !important;
+  font-weight: 700 !important;
+  border-left: 3px solid var(--primary) !important;
+}
+.dark .nav-item.active {
+  background-color: #1E3A8A !important;
+  color: #93C5FD !important;
+  border-left: 3px solid #3B82F6 !important;
+}
+
+/* Card & Surface Utilities */
+.chirp-card {
+  background-color: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
+}
+
+.chirp-btn-primary {
+  background-color: var(--primary);
+  color: #FFFFFF;
+  transition: all 0.15s ease-in-out;
+}
+.chirp-btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.chirp-btn-dark {
+  background-color: var(--dark-btn-bg);
+  color: var(--dark-btn-text);
+  transition: all 0.15s ease-in-out;
+}
+.chirp-btn-dark:hover {
+  background-color: var(--dark-btn-hover);
+}
+
+/* Chat bubble styles */
+.bubble-customer {
+  background-color: var(--chat-customer-bg);
+  border: 1px solid var(--chat-customer-border);
+  color: var(--chat-customer-text);
+}
+.bubble-staff-ai {
+  background-color: var(--chat-staff-bg);
+  border: 1px solid var(--chat-staff-border);
+  color: var(--chat-staff-text);
+}
+
+/* Table styles */
+.chirp-table th {
+  background-color: var(--canvas);
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--card-border);
+}
+.chirp-table td {
+  border-bottom: 1px solid var(--card-border);
+}
+.chirp-table tr:hover td {
+  background-color: var(--canvas);
+}
+
+/* Form Controls & Inputs */
+input:not([type="checkbox"]):not([type="radio"]), select, textarea {
+  background-color: var(--card);
+  border-color: #CBD5E1;
+  color: var(--text-heading);
+}
+.dark input:not([type="checkbox"]):not([type="radio"]), .dark select, .dark textarea {
+  background-color: #1F2937;
+  border-color: #374151;
+  color: #F8FAFC;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25) !important;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--canvas);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--card-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}

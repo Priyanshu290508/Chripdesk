@@ -177,19 +177,33 @@
    * Theme initialization & toggling
    */
   function initTheme() {
-    const saved = localStorage.getItem('chirpdesk_theme');
-    if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    let saved = null;
+    try {
+      saved = localStorage.getItem('chirpdesk_theme');
+    } catch (e) {
+      console.warn('localStorage not accessible for theme', e);
+    }
+
+    // Default is STRICTLY LIGHT. Only apply dark if saved === 'dark'
+    if (saved === 'dark') {
       document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
       if (el.themeToggleIcon) el.themeToggleIcon.setAttribute('data-lucide', 'sun');
     } else {
       document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
       if (el.themeToggleIcon) el.themeToggleIcon.setAttribute('data-lucide', 'moon');
     }
   }
 
   function toggleTheme() {
     const isDark = document.documentElement.classList.toggle('dark');
-    localStorage.setItem('chirpdesk_theme', isDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    try {
+      localStorage.setItem('chirpdesk_theme', isDark ? 'dark' : 'light');
+    } catch (e) {
+      console.warn('Could not save theme to localStorage', e);
+    }
     if (el.themeToggleIcon) {
       el.themeToggleIcon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
       if (window.lucide) window.lucide.createIcons();
@@ -419,10 +433,10 @@
     }
 
     el.inboxContactList.innerHTML = contacts.map(c => `
-      <div class="contact-item p-3 cursor-pointer hover:bg-canvas transition ${c.id === activeContactId ? 'bg-canvas border-l-4 border-slate-accent' : ''}" data-id="${c.id}">
+      <div class="contact-item p-3 cursor-pointer hover:bg-canvas transition ${c.id === activeContactId ? 'bg-primary-light/80 border-l-[3px] border-primary text-primary' : 'border-l-[3px] border-transparent'}" data-id="${c.id}">
         <div class="flex items-start justify-between gap-2">
           <div class="flex items-center gap-2.5 overflow-hidden">
-            <div class="w-8 h-8 rounded-full bg-slate-accent text-offwhite flex items-center justify-center text-xs font-bold shrink-0">
+            <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold shrink-0">
               ${c.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
             </div>
             <div class="truncate">
@@ -433,7 +447,7 @@
           <span class="text-[9px] text-muted shrink-0">${c.lastActive}</span>
         </div>
         <div class="mt-2 flex items-center justify-between text-[10px]">
-          <span class="px-1.5 py-0.2 rounded font-semibold ${c.status === 'needs_human' ? 'bg-tan-subtle text-tan-deep border border-tan-accent/30' : 'bg-slate-subtle text-slate-accent'}">
+          <span class="px-2 py-0.5 rounded font-semibold ${c.status === 'needs_human' ? 'bg-[#FFFBEB] text-[#92400E] border border-[#FDE68A]' : 'bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE]'}">
             ${c.status === 'needs_human' ? 'Needs Human' : 'AI Handled'}
           </span>
           <span class="text-muted font-medium">${c.assignedTo || 'Unassigned'}</span>
@@ -474,7 +488,7 @@
 
     if (contact.tags && el.detailsTagsContainer) {
       el.detailsTagsContainer.innerHTML = contact.tags.map(t => `
-        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-tan-subtle text-tan-deep border border-tan-accent/40">${t}</span>
+        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE]">${t}</span>
       `).join('');
     }
   }
@@ -504,8 +518,8 @@
     ` + messages.map(m => {
       if (m.type === 'system_event') {
         return `
-          <div class="p-2.5 rounded-brand-sm bg-tan-subtle/80 border border-tan-accent/30 text-[11px] text-tan-deep flex items-center gap-2">
-            <i data-lucide="shield-alert" class="w-4 h-4 shrink-0 text-tan-accent"></i>
+          <div class="p-2.5 rounded-brand-sm bg-[#FFFBEB] dark:bg-amber-950/40 border border-[#FDE68A] dark:border-amber-800 text-[11px] text-[#92400E] dark:text-amber-200 flex items-center gap-2">
+            <i data-lucide="shield-alert" class="w-4 h-4 shrink-0 text-amber-600"></i>
             <span>${m.text}</span>
           </div>
         `;
@@ -514,12 +528,12 @@
       const isMe = m.sender === 'agent' || m.sender === 'ai';
       return `
         <div class="flex ${isMe ? 'justify-end' : 'justify-start'}">
-          <div class="max-w-[85%] sm:max-w-[75%] p-3 rounded-brand-sm ${isMe ? (m.sender === 'ai' ? 'bg-slate-subtle border border-slate-accent/30' : 'bg-card border border-slate-accent/40') : 'bg-card border border-card-border'} shadow-xs">
-            <p class="text-charcoal leading-relaxed whitespace-pre-line">${m.text}</p>
+          <div class="max-w-[85%] sm:max-w-[75%] p-3 rounded-brand-sm ${isMe ? 'bg-[#EFF6FF] dark:bg-primary-deep/30 border border-[#BFDBFE] dark:border-primary-deep text-[#1E3A8A] dark:text-blue-100' : 'bg-white dark:bg-card border border-card-border text-charcoal'} shadow-xs">
+            <p class="leading-relaxed whitespace-pre-line">${m.text}</p>
             <div class="flex items-center justify-end gap-1 text-[9px] text-muted mt-1.5">
               <span>${m.time}</span>
-              ${m.sender === 'ai' ? '<span class="font-bold text-slate-accent">• AI Assistant</span>' : ''}
-              ${isMe ? '<i data-lucide="check-check" class="w-3.5 h-3.5 text-slate-accent"></i>' : ''}
+              ${m.sender === 'ai' ? '<span class="font-bold text-primary">• AI Assistant</span>' : ''}
+              ${isMe ? '<i data-lucide="check-check" class="w-3.5 h-3.5 text-primary"></i>' : ''}
             </div>
           </div>
         </div>
@@ -535,9 +549,9 @@
     activeInboxFilter = filter;
     document.querySelectorAll('.inbox-filter-tab').forEach(t => {
       if (t.getAttribute('data-filter') === filter) {
-        t.className = 'inbox-filter-tab active px-3 py-1 rounded-full bg-slate-accent text-offwhite';
+        t.className = 'inbox-filter-tab active px-3 py-1 rounded-full bg-primary text-white font-bold';
       } else {
-        t.className = 'inbox-filter-tab px-3 py-1 rounded-full text-muted hover:text-charcoal hover:bg-canvas';
+        t.className = 'inbox-filter-tab px-3 py-1 rounded-full text-muted hover:text-charcoal hover:bg-canvas font-semibold';
       }
     });
     renderInboxContacts();
@@ -557,7 +571,7 @@
           <div class="flex items-center gap-1">
             <input 
               type="text" 
-              class="rate-input w-28 px-2 py-1 bg-canvas rounded border border-card-border font-bold text-charcoal focus:outline-none focus:ring-1 focus:ring-tan-accent"
+              class="rate-input w-28 px-2 py-1 bg-canvas rounded border border-card-border font-bold text-charcoal focus:outline-none focus:ring-1 focus:ring-primary"
               value="${item.rate}"
               data-id="${item.id}"
             >
@@ -612,9 +626,9 @@
         <td class="py-3 px-4 text-muted font-mono text-[11px]">${b.templateName}</td>
         <td class="py-3 px-4 font-bold text-charcoal">${b.audience}</td>
         <td class="py-3 px-4 text-status-success font-semibold">${b.delivered}</td>
-        <td class="py-3 px-4 text-tan-deep font-semibold">${b.read}</td>
+        <td class="py-3 px-4 text-primary font-semibold">${b.read}</td>
         <td class="py-3 px-4">
-          <span class="px-2 py-0.5 rounded text-[10px] font-bold ${b.status === 'Completed' ? 'bg-status-success/20 text-status-success' : 'bg-tan-subtle text-tan-deep'}">
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold ${b.status === 'Completed' ? 'bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]' : 'bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE]'}">
             ${b.status}
           </span>
         </td>
@@ -641,7 +655,7 @@
         </td>
         <td class="py-3 px-4 text-muted">${c.assignedTo || 'AI Bot'}</td>
         <td class="py-3 px-4">
-          <span class="px-2 py-0.5 rounded text-[10px] font-bold ${c.status === 'needs_human' ? 'bg-tan-subtle text-tan-deep border border-tan-accent/40' : 'bg-status-success/20 text-status-success'}">
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold ${c.status === 'needs_human' ? 'bg-[#FFFBEB] text-[#92400E] border border-[#FDE68A]' : 'bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]'}">
             ${c.status === 'needs_human' ? 'Needs Human' : 'Active'}
           </span>
         </td>
@@ -973,7 +987,7 @@
 
     const toast = document.createElement('div');
     toast.className = 'px-4 py-2.5 rounded-brand-sm bg-charcoal text-offwhite text-xs font-semibold shadow-card flex items-center gap-2 pointer-events-auto border border-offwhite/10 transition-all duration-300 translate-y-2 opacity-0';
-    toast.innerHTML = `<i data-lucide="info" class="w-4 h-4 text-tan-accent shrink-0"></i><span>${msg}</span>`;
+    toast.innerHTML = `<i data-lucide="info" class="w-4 h-4 text-primary shrink-0"></i><span>${msg}</span>`;
 
     container.appendChild(toast);
     if (window.lucide) window.lucide.createIcons();

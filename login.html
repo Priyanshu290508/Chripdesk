@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +9,30 @@
   <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Shared Design System: LIGHT "Blue + Ink" with Optional Dark Navy -->
+  <link rel="stylesheet" href="theme.css">
+
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('chirpdesk_theme');
+        if (saved === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    })();
+  </script>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -21,34 +42,52 @@
       theme: {
         extend: {
           colors: {
-            canvas: '#F9FAFB',
-            card: '#FFFFFF',
-            'card-border': '#E5E7EB',
-            sidebar: '#F3F4F6',
+            canvas: 'var(--canvas)',
+            card: {
+              DEFAULT: 'var(--card)',
+              border: 'var(--card-border)'
+            },
+            'card-border': 'var(--card-border)',
+            sidebar: {
+              DEFAULT: 'var(--sidebar)',
+              border: 'var(--sidebar-border)'
+            },
+            topbar: {
+              DEFAULT: 'var(--topbar)',
+              border: 'var(--topbar-border)'
+            },
+            primary: {
+              DEFAULT: 'var(--primary)',
+              hover: 'var(--primary-hover)',
+              deep: 'var(--primary-deep)',
+              light: 'var(--primary-light)',
+              border: 'var(--primary-border)'
+            },
             slate: {
-              accent: '#3B82F6',
-              hover: '#2563EB',
-              subtle: '#E0F2FE',
-              deep: '#1D4ED8'
+              accent: 'var(--primary)',
+              hover: 'var(--primary-hover)',
+              subtle: 'var(--primary-light)',
+              deep: 'var(--primary-deep)'
             },
             tan: {
-              accent: '#0284C7',
-              hover: '#0369A1',
-              subtle: '#E0F2FE',
-              deep: '#075985'
+              accent: 'var(--info)',
+              hover: 'var(--primary-hover)',
+              subtle: 'var(--info-bg)',
+              deep: 'var(--info-text)'
             },
             charcoal: {
-              DEFAULT: '#1E293B',
-              soft: '#334155'
+              DEFAULT: 'var(--text-heading)',
+              soft: 'var(--text-body)'
             },
             muted: {
-              DEFAULT: '#64748B',
-              light: '#94A3B8'
+              DEFAULT: 'var(--text-muted)',
+              light: 'var(--text-placeholder)',
+              subtle: 'var(--card-border)'
             },
             status: {
-              success: '#10B981',
-              warning: '#F59E0B',
-              danger: '#EF4444'
+              success: 'var(--success)',
+              warning: 'var(--warning)',
+              danger: 'var(--danger)'
             },
             offwhite: '#FFFFFF'
           },
@@ -62,26 +101,28 @@
             'brand-lg': '20px'
           },
           boxShadow: {
-            'soft': '0 2px 12px -2px rgba(15, 23, 42, 0.04)',
-            'card': '0 4px 20px -2px rgba(15, 23, 42, 0.06)',
-            'float': '0 10px 30px -4px rgba(15, 23, 42, 0.10)'
+            'soft': 'var(--shadow-soft)',
+            'card': 'var(--shadow-card)',
+            'float': 'var(--shadow-float)'
           }
         }
       }
     }
   </script>
 </head>
+
 <body class="min-h-screen bg-canvas text-charcoal flex flex-col justify-between p-4 sm:p-6 antialiased">
-  
+
   <!-- Top brand header -->
   <header class="max-w-6xl mx-auto w-full flex items-center justify-between py-2">
     <a href="index.html" class="flex items-center gap-2.5 group">
-      <div class="w-9 h-9 rounded-brand-sm bg-slate-accent flex items-center justify-center text-offwhite shadow-soft">
-        <i data-lucide="message-square-quote" class="w-5 h-5 text-tan-subtle"></i>
+      <div class="w-9 h-9 rounded-brand-sm bg-primary flex items-center justify-center text-white shadow-soft">
+        <i data-lucide="message-square-quote" class="w-5 h-5 text-white"></i>
       </div>
       <span class="text-xl font-bold tracking-tight text-charcoal">Chirpdesk</span>
     </a>
-    <a href="index.html" class="text-xs font-semibold text-muted hover:text-charcoal flex items-center gap-1 transition">
+    <a href="index.html"
+      class="text-xs font-semibold text-muted hover:text-charcoal flex items-center gap-1 transition">
       <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
       <span>Back to website</span>
     </a>
@@ -90,12 +131,12 @@
   <!-- Main auth card container -->
   <main class="max-w-md w-full mx-auto my-8">
     <div class="bg-card rounded-brand border border-card-border p-6 sm:p-8 shadow-card">
-      
+
       <!-- One-click Demo Access Banner -->
-      <div class="mb-6 p-4 rounded-brand-sm bg-tan-subtle/80 border border-tan-accent/40 space-y-2.5">
+      <div class="mb-6 p-4 rounded-brand-sm bg-primary-light border border-primary-border space-y-2.5">
         <div class="flex items-center justify-between">
-          <span class="text-[11px] font-extrabold uppercase tracking-wider text-tan-deep flex items-center gap-1.5">
-            <i data-lucide="zap" class="w-3.5 h-3.5 text-tan-accent"></i> Instant Demo Workspaces
+          <span class="text-[11px] font-extrabold uppercase tracking-wider text-primary flex items-center gap-1.5">
+            <i data-lucide="zap" class="w-3.5 h-3.5 text-primary"></i> Instant Demo Workspaces
           </span>
           <span class="text-[10px] font-semibold text-muted">No password needed</span>
         </div>
@@ -103,20 +144,14 @@
           Explore the fully functional dashboard pre-loaded with authentic Indian SME data:
         </p>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-          <button 
-            id="loginAsSharmaBtn" 
-            type="button" 
-            class="p-2.5 bg-card hover:bg-sidebar border border-card-border rounded-md text-left transition flex flex-col"
-          >
-            <span class="text-xs font-bold text-slate-accent">Sharma Jewellers</span>
+          <button id="loginAsSharmaBtn" type="button"
+            class="p-2.5 bg-card hover:bg-canvas border border-card-border rounded-md text-left transition flex flex-col">
+            <span class="text-xs font-bold text-primary">Sharma Jewellers</span>
             <span class="text-[10px] text-muted">Jaipur • Bullion &amp; Bridal</span>
           </button>
-          <button 
-            id="loginAsGuptaBtn" 
-            type="button" 
-            class="p-2.5 bg-card hover:bg-sidebar border border-card-border rounded-md text-left transition flex flex-col"
-          >
-            <span class="text-xs font-bold text-tan-deep">Gupta General Store</span>
+          <button id="loginAsGuptaBtn" type="button"
+            class="p-2.5 bg-card hover:bg-canvas border border-card-border rounded-md text-left transition flex flex-col">
+            <span class="text-xs font-bold text-info">Gupta General Store</span>
             <span class="text-[10px] text-muted">Indore • Kirana &amp; Grocery</span>
           </button>
         </div>
@@ -124,10 +159,12 @@
 
       <!-- Auth Tabs: Sign in vs Create Account -->
       <div class="flex items-center justify-center p-1 bg-canvas rounded-brand-sm border border-card-border mb-6">
-        <button id="tabSignInBtn" class="flex-1 py-2 text-xs font-bold rounded-md bg-card text-charcoal shadow-sm transition">
+        <button id="tabSignInBtn"
+          class="flex-1 py-2 text-xs font-bold rounded-md bg-card text-charcoal shadow-sm transition">
           Sign In
         </button>
-        <button id="tabSignUpBtn" class="flex-1 py-2 text-xs font-bold rounded-md text-muted hover:text-charcoal transition">
+        <button id="tabSignUpBtn"
+          class="flex-1 py-2 text-xs font-bold rounded-md text-muted hover:text-charcoal transition">
           Create Account
         </button>
       </div>
@@ -140,29 +177,20 @@
 
       <!-- Auth Form -->
       <form id="authForm" class="space-y-4">
-        
+
         <!-- Shop Name (Only visible in Sign Up) -->
         <div id="shopNameField" class="hidden">
           <label class="block text-xs font-bold text-charcoal mb-1">Business / Shop Name</label>
-          <input 
-            id="shopNameInput"
-            type="text" 
-            placeholder="e.g. Royal Jewellers" 
-            class="w-full px-3.5 py-2.5 bg-canvas rounded-brand-sm border border-card-border text-sm text-charcoal placeholder-muted focus:outline-none focus:ring-2 focus:ring-slate-accent"
-          >
+          <input id="shopNameInput" type="text" placeholder="e.g. Royal Jewellers"
+            class="w-full px-3.5 py-2.5 bg-canvas rounded-brand-sm border border-card-border text-sm text-charcoal placeholder-muted focus:outline-none focus:ring-2 focus:ring-slate-accent">
         </div>
 
         <!-- Email Field -->
         <div>
           <label class="block text-xs font-bold text-charcoal mb-1">Email address</label>
-          <input 
-            id="emailInput"
-            type="email" 
-            required 
-            placeholder="rajesh@sharmajewellers.in" 
+          <input id="emailInput" type="email" required placeholder="rajesh@sharmajewellers.in"
             value="rajesh@sharmajewellers.in"
-            class="w-full px-3.5 py-2.5 bg-canvas rounded-brand-sm border border-card-border text-sm text-charcoal placeholder-muted focus:outline-none focus:ring-2 focus:ring-slate-accent"
-          >
+            class="w-full px-3.5 py-2.5 bg-canvas rounded-brand-sm border border-card-border text-sm text-charcoal placeholder-muted focus:outline-none focus:ring-2 focus:ring-slate-accent">
         </div>
 
         <!-- Password Field -->
@@ -171,22 +199,13 @@
             <label class="block text-xs font-bold text-charcoal">Password</label>
             <a href="#" class="text-[11px] font-semibold text-slate-accent hover:underline">Forgot?</a>
           </div>
-          <input 
-            id="passwordInput"
-            type="password" 
-            required 
-            placeholder="••••••••" 
-            value="sharma@2026"
-            class="w-full px-3.5 py-2.5 bg-canvas rounded-brand-sm border border-card-border text-sm text-charcoal placeholder-muted focus:outline-none focus:ring-2 focus:ring-slate-accent"
-          >
+          <input id="passwordInput" type="password" required placeholder="••••••••" value="sharma@2026"
+            class="w-full px-3.5 py-2.5 bg-canvas rounded-brand-sm border border-card-border text-sm text-charcoal placeholder-muted focus:outline-none focus:ring-2 focus:ring-slate-accent">
         </div>
 
         <!-- Submit Button -->
-        <button 
-          id="authSubmitBtn"
-          type="submit" 
-          class="w-full py-3 rounded-brand-sm bg-slate-accent text-offwhite font-bold text-sm hover:bg-slate-hover transition shadow-soft flex items-center justify-center gap-2 mt-2"
-        >
+        <button id="authSubmitBtn" type="submit"
+          class="w-full py-3 rounded-brand-sm bg-primary text-white font-bold text-sm hover:bg-primary-hover transition shadow-soft flex items-center justify-center gap-2 mt-2">
           <span id="submitBtnText">Sign In to Dashboard</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
@@ -195,12 +214,9 @@
       <!-- Alternate OTP Login option -->
       <div class="mt-6 pt-5 border-t border-card-border text-center">
         <p class="text-xs text-muted mb-3">Prefer mobile OTP authentication?</p>
-        <button 
-          id="otpToggleBtn" 
-          type="button" 
-          class="w-full py-2.5 rounded-brand-sm bg-canvas border border-card-border font-semibold text-xs text-charcoal hover:bg-sidebar transition flex items-center justify-center gap-2"
-        >
-          <i data-lucide="smartphone" class="w-4 h-4 text-slate-accent"></i>
+        <button id="otpToggleBtn" type="button"
+          class="w-full py-2.5 rounded-brand-sm bg-canvas border border-card-border font-semibold text-xs text-charcoal hover:bg-sidebar transition flex items-center justify-center gap-2">
+          <i data-lucide="smartphone" class="w-4 h-4 text-primary"></i>
           <span>Login via WhatsApp OTP</span>
         </button>
       </div>
@@ -284,5 +300,5 @@
     });
   </script>
 </body>
-</html>
 
+</html>
