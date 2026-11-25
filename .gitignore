@@ -6,11 +6,18 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
 # Node / Logs
 node_modules/
 *.log
 
 # Scratch and Environment
 .env
-.env.local
+.env.*
+backend/.env
 scratch/

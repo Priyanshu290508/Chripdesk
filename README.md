@@ -79,16 +79,20 @@ When a customer sends a WhatsApp message to the connected business number, Chirp
 ## Project Structure
 
 ```text
-Chripdesk/
-├── backend/
-│   ├── main.py              # FastAPI app, /webhook GET & POST routes, Gemini + Meta integration
-│   ├── requirements.txt     # Python dependencies (fastapi, uvicorn, google-genai, supabase, httpx)
-│   └── .env.example         # Environment variable template (safe for GitHub)
-├── index.html               # Mint Slate SaaS dashboard UI
-├── app.js                   # Supabase Realtime listeners, inbox rendering, and UI logic
-├── schema.sql               # 9-table multi-tenant PostgreSQL schema for Supabase
-├── .gitignore               # Excludes .env, venv, and __pycache__ from version control
-└── README.md                # Project documentation
+chripdesk/
+├── index.html            # Marketing landing page (all 15 structured sections)
+├── login.html            # Authentication page with 1-click Indian SME demo accounts
+├── dashboard.html        # Logged-in dashboard application shell & views
+├── app.js                # Core controller, view router, live chat & event simulation
+├── supabase.js           # Supabase data service with automatic offline/mock fallback
+├── mock-data.js          # Realistic Indian SME datasets (Sharma Jewellers & Gupta Kirana)
+├── supabase-schema.sql   # Complete PostgreSQL schema with Row-Level Security (RLS)
+├── backend/              # Python FastAPI backend
+│   ├── main.py           # Meta WhatsApp webhook, Gemini AI auto-reply, send endpoints
+│   ├── requirements.txt  # FastAPI, google-genai, httpx, python-dotenv
+│   └── .env.example      # Environment variables template
+├── .gitignore            # Excludes .env, venv, and __pycache__ from version control
+└── README.md             # Architecture, design guidelines & documentation
 ```
 
 ---
