@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chirpdesk Dashboard — WhatsApp AI & Automation</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Supabase JS CDN (Official CDN for Supabase client) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Tailwind CSS CDN with Mint Slate Theme & Dark-Mode Variant -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            canvas: 'var(--canvas)',
+            card: 'var(--card)',
+            'card-border': 'var(--border)',
+            sidebar: 'var(--sidebar)',
+            slate: {
+              accent: '#5F7380',
+              hover: '#4E616E',
+              subtle: '#E2E6E8',
+              deep: '#3B4952'
+            },
+            tan: {
+              accent: '#A89070',
+              hover: '#957E60',
+              subtle: '#EFEAE2',
+              deep: '#78644A'
+            },
+            charcoal: {
+              DEFAULT: 'var(--charcoal)',
+              soft: 'var(--charcoal-soft)'
+            },
+            muted: {
+              DEFAULT: 'var(--muted)',
+              light: '#8F9490',
+              subtle: '#B5BAB7'
+            },
+            status: {
+              success: '#5E8B6E',
+              warning: '#B8893F',
+              danger: '#A5524A'
+            },
+            offwhite: '#F2F4F1'
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Outfit"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          borderRadius: {
+            'brand': '18px',
+            'brand-sm': '14px',
+            'brand-lg': '22px'
+          },
+          boxShadow: {
+            'soft': '0 4px 20px -2px rgba(43, 45, 46, 0.05)',
+            'card': '0 8px 30px -4px rgba(43, 45, 46, 0.07)',
+            'float': '0 12px 36px -6px rgba(43, 45, 46, 0.12)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --canvas: #DCDFDA;
+      --card: #E8EAE6;
+      --border: #C9CCC6;
+      --sidebar: #D3D6D1;
+      --primary: #5F7380;
+      --tan: #A89070;
+      --charcoal: #2B2D2E;
+      --charcoal-soft: #383B3C;
+      --muted: #727875;
+      --offwhite: #F2F4F1;
+    }
+
+    .dark {
+      --canvas: #1A1C1B;
+      --card: #232625;
+      --border: #353937;
+      --sidebar: #1E2120;
+      --primary: #748B99;
+      --tan: #BD9F7E;
+      --charcoal: #E5E8E6;
+      --charcoal-soft: #2E3230;
+      --muted: #8E9491;
+      --offwhite: #141615;
+    }
+
+    body {
+      background-color: var(--canvas);
+      color: var(--charcoal);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Active nav pill indicator */
+    .nav-item.active {
+      background-color: var(--canvas);
+      color: var(--charcoal);
+      font-weight: 700;
+      border-left: 4px solid var(--primary);
+    }
+
+    /* Custom subtle scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--sidebar);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--muted);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-canvas text-charcoal flex overflow-hidden">
+
+  <!-- Mobile Drawer Backdrop Overlay -->
+  <div id="mobileDrawerOverlay" class="fixed inset-0 bg-charcoal/40 backdrop-blur-xs z-40 hidden md:hidden transition-opacity"></div>
+
+  <!-- ========================================================================= -->
+  <!-- FIXED LEFT SIDEBAR (~280px) -->
+  <!-- ========================================================================= -->
+  <aside id="appSidebar" class="fixed top-0 bottom-0 left-0 w-72 bg-sidebar border-r border-card-border z-50 flex flex-col justify-between -translate-x-full md:translate-x-0 transition-transform duration-200">
+    
+    <!-- Top Area: Logo + Nav Items -->
+    <div class="flex-1 flex flex-col min-h-0">
+      
+      <!-- Logo Header -->
+      <div class="h-20 px-5 flex items-center justify-between border-b border-card-border shrink-0">
+        <a href="index.html" class="flex items-center gap-3 group">
+          <div class="w-9 h-9 rounded-brand-sm bg-slate-accent flex items-center justify-center text-offwhite shadow-soft">
+            <i data-lucide="message-square-quote" class="w-5 h-5 text-tan-subtle"></i>
+          </div>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-1.5">
+              <span class="text-lg font-bold tracking-tight text-charcoal">Chirpdesk</span>
+              <span id="sidebarWorkspaceBadge" class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-tan-subtle text-tan-deep border border-tan-accent/30">
+                Jeweller
+              </span>
+            </div>
+            <span id="sidebarStoreName" class="text-[11px] font-semibold text-muted truncate max-w-[140px]">
+              Sharma Jewellers
+            </span>
+          </div>
+        </a>
+
+        <!-- Mobile close drawer button -->
+        <button id="closeDrawerBtn" class="md:hidden p-1.5 rounded-md hover:bg-canvas text-muted">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Scrollable Nav with Section Labels -->
+      <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-6 text-xs font-semibold">
+        
+        <!-- (No label) Dashboard -->
+        <div class="space-y-1">
+          <button class="nav-item active w-full flex items-center gap-3 px-3.5 py-2.5 rounded-brand-sm text-charcoal/80 hover:text-charcoal hover:bg-canvas transition" data-view="overview">
+            <i data-lucide="layout-dashboard" class="w-4 h-4 text-slate-accent"></i>
+            <span>Dashboard</span>
+          </button>
+        </div>
+
+        <!-- ENGAGE Section -->
+        <div class="space-y-1">
+          <p class="px-3.5 text-[10px] font-extrabold uppercase tracking-wider text-muted">Engage</p>
+          
+          <button class="nav-item w-full flex items-center justify-between px-3.5 py-2 rounded-brand-sm text-charcoal/80 hover:text-charcoal hover:bg-canvas transition" data-view="inbox">
+            <div class="flex items-center gap-3">
+              <i data-lucide="inbox" class="w-4 h-4 text-slate-accent"></i>
+              <span>Inbox (Live Chat)</span>
+            </div>
+            <span id="sidebarUnreadBadge" class="px-1.5 py-0.5 rounded-full bg-tan-accent text-offwhite text-[10px] font-bold">
+              3
+            </span>
+          </button>
+
+          <button class="nav-item w-full flex items-center gap-3 px-3.5 py-2 rounded-brand-sm text-charcoal/80 hover:text-charcoal hover:bg-canvas transition" data-view="broadcasts">
+            <i data-lucide="send" class="w-4 h-4 text-slate-accent"></i>
+            <span>Broadcasts</span>
+          </button>
+
+          <button class="nav-item w-full flex items-center justify-between px-3.5 py-2 rounded-brand-sm text-charcoal/80 hover:text-charcoal hover:bg-canvas transition" data-view="rate-alerts">
+            <div class="flex items-center gap-3">
+              <i data-lucide="trending-up" class="w-4 h-4 text-tan-accent"></i>
+              <span>Rate Alerts</span>
+            </div>
+            <span class="px-1.5 py-0.5 rounded bg-tan-subtle text-tan-deep text-[9px] font-extrabold border border-tan-accent/30">
+              Gold / MCX
+            </span>
+          </button>
+
+          <button class="nav-item w-full flex items-center gap-3 px-3.5 py-2 rounded-brand-sm text-charcoal/80 hover:text-charcoal hover:bg-canvas transition" data-view="ai-assistant">
+            <i data-lucide="bot" class="w-4 h-4 text-slate-accent"></i>
+            <span>AI Assistant</span>
+          </button>
+        </div>
+
+        <!-- AUDIENCE Section (Expandable Contacts) -->
+        <div class="space-y-1">
+          <p class="px-3.5 text-[10px] font-extrabold uppercase tracking-wider text-muted">Audience</p>
+
+          <div>
+            <button id="contactsExpandBtn" class="w-full flex items-center justify-between px-3.5 py-2 rounded-brand-sm text-charcoal/80 hover:text-charcoal hover:bg-canvas transition">
+              <div class="flex items-center gap-3">
+                <i data-lucide="users" class="w-4 h-4 text-slate-accent"></i>
+                <span>Contacts</span>
+              </div>
+              <i id="contactsChevron" data-lucide="chevron-down" class="w-3.5 h-3.5 text-muted transition-transform"></i>
+            </button>
+            <div id="contactsSubmenu" class="hidden pl-8 pr-2 pt-1 space-y-1 text-[11px]">
+              <button class="nav-item w-full text-left py-1.5 px-2 rounded hover:bg-canvas text-charcoal/80" data-view="contacts" data-sub="all">All Contacts</button>
+              <button class="nav-item w-full text-left py-1.5 px-2 rounded hover:bg-canvas text-charcoal/80" data-view="contacts" data-sub="lists">Saved Lists</button>
+              <button class="nav-item w-full text-left py-1.5 px-2 rounded hover:bg-canvas text-charcoal/80" data-view="contacts" data-sub="import">Import CSV</button>
+            </div>
+          </div>
+
+          <button class="nav-item w-full flex items-center gap-3 px-3.5 py-2 rounded-brand-sm text-charcoal/80 hover:text-charcoal hover:bg-canvas transition" data-view="subscribers">
+            <i data-lucide="user-check" class="w-4 h-4 text-slate-accent"></i>
+            <span>Subscribers</span>
+          </button>
+        </div>
+
+        <!-- AUTOMATE Section -->
+        <div class="space-y-1">
+          <p class="px-3.5 text-[10px] font-extrabold uppercase tracking-wider text-muted">Automate</p>
+
+          <button class="nav-item w-full flex items-center gap-3 px-3.5 py-2 rounded-brand-sm text-charcoal/80 hover:text-charcoal hover:bg-canvas transition" data-view="workflows">
+            <i data-lucide="git-branch" class="w-4 h-4 text-tan-accent"></i>
+            <span>Workflows</span>
+          </button>
+
+          <button class="nav-item w-full flex items-center gap-3 px-3.5 py-2 rounded-brand-sm text-charcoal/80 hover:text-charcoal hover:bg-canvas transition" data-view="receipts">
+            <i data-lucide="receipt" class="w-4 h-4 text-slate-accent"></i>
+            <span>Order &amp; Receipts</span>
+          </button>
+
+          <button class="nav-item w-full flex items-center gap-3 px-3.5 py-2 rounded-brand-sm text-charcoal/80 hover:text-charcoal hover:bg-canvas transition" data-view="templates">
+            <i data-lucide="layout-template" class="w-4 h-4 text-slate-accent"></i>
+            <span>Templates</span>
+          </button>
+        </div>
+
+        <!-- ACCOUNT Section -->
+        <div class="space-y-1">
+          <p class="px-3.5 text-[10px] font-extrabold uppercase tracking-wider text-muted">Account</p>
+
+          <button class="nav-item w-full flex items-center gap-3 px-3.5 py-2 rounded-brand-sm text-charcoal/80 hover:text-charcoal hover:bg-canvas transition" data-view="team">
+            <i data-lucide="user-cog" class="w-4 h-4 text-slate-accent"></i>
+            <span>Team</span>
+          </button>
+
+          <button class="nav-item w-full flex items-center gap-3 px-3.5 py-2 rounded-brand-sm text-charcoal/80 hover:text-charcoal hover:bg-canvas transition" data-view="settings">
+            <i data-lucide="settings" class="w-4 h-4 text-slate-accent"></i>
+            <span>Settings</span>
+          </button>
+        </div>
+
+      </nav>
+
+    </div>
+
+    <!-- Pinned Bottom Area -->
+    <div class="p-4 border-t border-card-border bg-sidebar shrink-0 space-y-3">
+      
+      <!-- Pinned Plan Status Card -->
+      <div class="p-3.5 rounded-brand-sm bg-card border border-card-border shadow-soft space-y-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-1.5">
+            <span id="sidebarPlanName" class="text-xs font-bold text-charcoal">Pro Plan</span>
+            <span class="px-1.5 py-0.2 rounded text-[9px] font-extrabold bg-status-success/20 text-status-success">ACTIVE</span>
+          </div>
+          <button id="upgradePlanBtn" class="text-[11px] font-bold text-slate-accent hover:underline">
+            Upgrade
+          </button>
+        </div>
+
+        <!-- Credits progress bar -->
+        <div class="space-y-1">
+          <div class="flex justify-between text-[10px] font-semibold text-muted">
+            <span>Message Credits</span>
+            <span id="sidebarCreditsText" class="text-charcoal font-bold">3,420 / 5,000</span>
+          </div>
+          <div class="w-full h-1.5 rounded-full bg-canvas overflow-hidden">
+            <div id="sidebarCreditsBar" class="bg-slate-accent h-full rounded-full transition-all duration-300" style="width: 68%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Icon Buttons Row: API / Developer, Dark Mode, Logout, Version -->
+      <div class="flex items-center justify-between text-muted pt-1">
+        <div class="flex items-center gap-1">
+          <button id="devModalTrigger" aria-label="Developer API" title="Developer API" class="p-2 rounded-md hover:bg-card hover:text-charcoal transition">
+            <i data-lucide="code" class="w-4 h-4"></i>
+          </button>
+          <button id="themeToggleBtn" aria-label="Toggle Dark Mode" title="Toggle Theme" class="p-2 rounded-md hover:bg-card hover:text-charcoal transition">
+            <i id="themeToggleIcon" data-lucide="moon" class="w-4 h-4"></i>
+          </button>
+          <a href="login.html" aria-label="Sign Out" title="Sign Out" class="p-2 rounded-md hover:bg-card hover:text-charcoal transition">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+          </a>
+        </div>
+        <span class="text-[10px] font-mono text-muted/70 tracking-tight">v1.2.4-bharat</span>
+      </div>
+
+    </div>
+
+  </aside>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN LAYOUT WRAPPER (STICKY TOP BAR + SCROLLING MAIN AREA) -->
+  <!-- ========================================================================= -->
+  <div class="flex-1 md:ml-72 flex flex-col h-screen overflow-hidden bg-canvas">
+    
+    <!-- STICKY TOP BAR -->
+    <header class="h-20 bg-card/90 backdrop-blur-md border-b border-card-border px-4 sm:px-6 flex items-center justify-between gap-4 shrink-0 z-30">
+      
+      <!-- Left side: Hamburger + Page Title -->
+      <div class="flex items-center gap-3">
+        <button id="openDrawerBtn" class="md:hidden p-2 rounded-brand-sm text-charcoal hover:bg-canvas">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        <div>
+          <h1 id="pageTitle" class="text-xl font-bold tracking-tight text-charcoal">
+            Overview
+          </h1>
+          <p id="pageSubtitle" class="text-[11px] text-muted hidden sm:block">
+            Realtime shop metrics &amp; WhatsApp performance
+          </p>
+        </div>
+      </div>
+
+      <!-- Right side tools -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        
+        <!-- "Take a tour" Pill Button -->
+        <button id="takeTourBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-subtle text-slate-accent border border-slate-accent/30 text-xs font-bold hover:bg-slate-accent hover:text-offwhite transition shadow-xs">
+          <i data-lucide="compass" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">Take a tour</span>
+        </button>
+
+        <!-- Search Box -->
+        <div class="relative hidden lg:block">
+          <i data-lucide="search" class="w-4 h-4 text-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+          <input 
+            id="globalSearchInput"
+            type="text" 
+            placeholder="Search contacts, alerts... (Ctrl+K)" 
+            class="pl-9 pr-4 py-1.5 text-xs bg-canvas rounded-full border border-card-border text-charcoal placeholder-muted focus:outline-none focus:ring-1 focus:ring-slate-accent w-56 xl:w-64"
+          >
+        </div>
+
+        <!-- Support Icon -->
+        <button id="supportBtn" aria-label="Support Hotline" title="Support Hotline" class="p-2 rounded-full hover:bg-canvas text-charcoal transition relative">
+          <i data-lucide="life-buoy" class="w-4 h-4"></i>
+        </button>
+
+        <!-- Notification Bell -->
+        <div class="relative">
+          <button id="notificationBellBtn" aria-label="Notifications" title="Notifications" class="p-2 rounded-full hover:bg-canvas text-charcoal transition relative">
+            <i data-lucide="bell" class="w-4 h-4"></i>
+            <span class="w-2 h-2 rounded-full bg-tan-accent absolute top-1.5 right-1.5 ring-2 ring-card"></span>
+          </button>
+          
+          <!-- Notification Dropdown Popover -->
+          <div id="notificationPopover" class="hidden absolute right-0 mt-2 w-80 bg-card rounded-brand border border-card-border shadow-float p-3 z-50 text-xs space-y-2">
+            <div class="flex items-center justify-between pb-2 border-b border-card-border">
+              <span class="font-bold text-charcoal">Notifications</span>
+              <span class="text-[10px] text-muted font-semibold">2 New</span>
+            </div>
+            <div class="space-y-2">
+              <div class="p-2 rounded-md bg-canvas border border-card-border space-y-0.5">
+                <p class="font-bold text-charcoal">Daily Bullion Alert Dispatched</p>
+                <p class="text-[11px] text-muted">1,420 recipients received Gold &amp; Silver rates at 10:30 AM.</p>
+                <span class="text-[9px] text-slate-accent block pt-0.5">45m ago</span>
+              </div>
+              <div class="p-2 rounded-md bg-canvas border border-card-border space-y-0.5">
+                <p class="font-bold text-charcoal">Handoff Required: Sunita Agarwal</p>
+                <p class="text-[11px] text-muted">Customer negotiating making charges on antique set.</p>
+                <span class="text-[9px] text-tan-deep block pt-0.5">1h ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Workspace Switcher Dropdown -->
+        <div class="relative">
+          <button id="workspaceSwitcherBtn" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-canvas border border-card-border text-xs font-semibold text-charcoal hover:bg-sidebar transition shadow-xs">
+            <span class="w-2 h-2 rounded-full bg-status-success"></span>
+            <span id="topbarWorkspaceName" class="truncate max-w-[120px] sm:max-w-[150px]">Sharma Jewellers</span>
+            <i data-lucide="chevrons-up-down" class="w-3.5 h-3.5 text-muted"></i>
+          </button>
+
+          <!-- Workspace Dropdown Menu -->
+          <div id="workspaceDropdown" class="hidden absolute right-0 mt-2 w-72 bg-card rounded-brand border border-card-border shadow-float p-2 z-50 text-xs space-y-1">
+            <p class="px-2 py-1 text-[10px] font-extrabold uppercase tracking-wider text-muted">Demo Workspaces</p>
+            
+            <button class="workspace-select-item w-full flex items-center justify-between p-2 rounded-brand-sm hover:bg-canvas transition text-left" data-ws="ws-sharma-jewellers">
+              <div>
+                <p class="font-bold text-charcoal">Sharma Jewellers</p>
+                <p class="text-[10px] text-muted">Jaipur • Bullion, Gold &amp; Bridal</p>
+              </div>
+              <i id="wsCheck-sharma" data-lucide="check" class="w-4 h-4 text-slate-accent"></i>
+            </button>
+
+            <button class="workspace-select-item w-full flex items-center justify-between p-2 rounded-brand-sm hover:bg-canvas transition text-left" data-ws="ws-gupta-general">
+              <div>
+                <p class="font-bold text-charcoal">Gupta General Store</p>
+                <p class="text-[10px] text-muted">Indore • Kirana, FMCG &amp; Groceries</p>
+              </div>
+              <i id="wsCheck-gupta" data-lucide="check" class="w-4 h-4 text-slate-accent hidden"></i>
+            </button>
+
+            <div class="pt-2 border-t border-card-border">
+              <button id="addNewWorkspaceBtn" class="w-full flex items-center gap-2 p-2 rounded-brand-sm hover:bg-canvas text-slate-accent font-bold transition">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                <span>Add new store workspace</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avatar Menu -->
+        <div class="relative">
+          <button id="userAvatarBtn" class="w-9 h-9 rounded-full bg-slate-accent text-offwhite flex items-center justify-center font-bold text-xs shadow-soft ring-2 ring-card-border">
+            <span id="userAvatarInitials">RS</span>
+          </button>
+        </div>
+
+      </div>
+
+    </header>
+
+    <!-- SCROLLING MAIN CONTENT AREA -->
+    <main id="mainScrollArea" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-8">
+      
+      <!-- ===================================================================== -->
+      <!-- VIEW 1: OVERVIEW PAGE -->
+      <!-- ===================================================================== -->
+      <div id="viewOverview" class="app-view space-y-8">
+        
+        <!-- 1. Welcome Header -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-card p-6 rounded-brand border border-card-border shadow-soft">
+          <div>
+            <p class="text-xs font-semibold text-muted">Welcome back,</p>
+            <h2 id="overviewUserName" class="text-2xl sm:text-3xl font-extrabold text-slate-accent tracking-tight">
+              Rajesh Sharma
+            </h2>
+            <div class="flex items-center gap-2 mt-1.5 text-xs text-muted">
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-status-success/20 text-status-success border border-status-success/30">
+                <span class="w-1.5 h-1.5 rounded-full bg-status-success animate-pulse"></span> Active
+              </span>
+              <span id="overviewHealthStatus">All 3 services running normally • Last sync 2m ago</span>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2.5">
+            <span id="overviewCreditsPill" class="px-3.5 py-2 rounded-full bg-canvas border border-card-border text-xs font-bold text-charcoal">
+              3,420 Credits Left
+            </span>
+            <button id="overviewCreateWorkflowBtn" class="px-4 py-2 rounded-brand-sm bg-card border border-card-border text-xs font-bold text-charcoal hover:bg-sidebar transition">
+              Create Workflow
+            </button>
+            <button id="overviewNewBroadcastBtn" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-brand-sm bg-slate-accent text-offwhite text-xs font-bold hover:bg-slate-hover transition shadow-soft">
+              <i data-lucide="send" class="w-3.5 h-3.5"></i>
+              <span>New Broadcast</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. KPI Row of 5 Equal Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          
+          <!-- Card 1: Queued -->
+          <div class="bg-card rounded-brand border border-card-border p-4 shadow-soft flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <div class="w-8 h-8 rounded-brand-sm bg-slate-subtle text-slate-accent flex items-center justify-center">
+                <i data-lucide="clock" class="w-4 h-4"></i>
+              </div>
+              <!-- Tiny SVG Sparkline -->
+              <svg class="w-14 h-6 text-slate-accent" viewBox="0 0 50 20" fill="none">
+                <path d="M0 15 Q 12 5, 25 10 T 50 4" stroke="currentColor" stroke-width="2" fill="none"/>
+              </svg>
+            </div>
+            <div class="mt-3">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-muted">Messages Queued (30D)</span>
+              <p id="kpiQueued" class="text-2xl font-black text-charcoal mt-0.5">142</p>
+              <span class="text-[10px] text-muted italic">Example data</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Sent -->
+          <div class="bg-card rounded-brand border border-card-border p-4 shadow-soft flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <div class="w-8 h-8 rounded-brand-sm bg-slate-subtle text-slate-accent flex items-center justify-center">
+                <i data-lucide="send" class="w-4 h-4"></i>
+              </div>
+              <svg class="w-14 h-6 text-slate-accent" viewBox="0 0 50 20" fill="none">
+                <path d="M0 18 L 10 12 L 20 15 L 30 7 L 40 9 L 50 2" stroke="currentColor" stroke-width="2" fill="none"/>
+              </svg>
+            </div>
+            <div class="mt-3">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-muted">Sent (30D)</span>
+              <p id="kpiSent" class="text-2xl font-black text-charcoal mt-0.5">18,450</p>
+              <span class="text-[10px] text-muted italic">Example data</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Delivered -->
+          <div class="bg-card rounded-brand border border-card-border p-4 shadow-soft flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <div class="w-8 h-8 rounded-brand-sm bg-status-success/20 text-status-success flex items-center justify-center">
+                <i data-lucide="check-check" class="w-4 h-4"></i>
+              </div>
+              <svg class="w-14 h-6 text-status-success" viewBox="0 0 50 20" fill="none">
+                <path d="M0 16 L 15 10 L 30 12 L 50 3" stroke="currentColor" stroke-width="2" fill="none"/>
+              </svg>
+            </div>
+            <div class="mt-3">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-muted">Delivered (30D)</span>
+              <p id="kpiDelivered" class="text-2xl font-black text-charcoal mt-0.5">17,980</p>
+              <span class="text-[10px] text-status-success font-bold">97.4% delivery</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Read -->
+          <div class="bg-card rounded-brand border border-card-border p-4 shadow-soft flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <div class="w-8 h-8 rounded-brand-sm bg-tan-subtle text-tan-accent flex items-center justify-center">
+                <i data-lucide="eye" class="w-4 h-4"></i>
+              </div>
+              <svg class="w-14 h-6 text-tan-accent" viewBox="0 0 50 20" fill="none">
+                <path d="M0 17 L 12 11 L 25 14 L 38 8 L 50 4" stroke="currentColor" stroke-width="2" fill="none"/>
+              </svg>
+            </div>
+            <div class="mt-3">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-muted">Read (30D)</span>
+              <p id="kpiRead" class="text-2xl font-black text-charcoal mt-0.5">15,210</p>
+              <span class="text-[10px] text-tan-deep font-bold">84.6% open rate</span>
+            </div>
+          </div>
+
+          <!-- Card 5: Failed -->
+          <div class="bg-card rounded-brand border border-card-border p-4 shadow-soft flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <div class="w-8 h-8 rounded-brand-sm bg-status-danger/20 text-status-danger flex items-center justify-center">
+                <i data-lucide="alert-circle" class="w-4 h-4"></i>
+              </div>
+              <svg class="w-14 h-6 text-status-danger" viewBox="0 0 50 20" fill="none">
+                <path d="M0 8 L 15 12 L 30 7 L 45 15 L 50 18" stroke="currentColor" stroke-width="2" fill="none"/>
+              </svg>
+            </div>
+            <div class="mt-3">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-muted">Failed (30D)</span>
+              <p id="kpiFailed" class="text-2xl font-black text-status-danger mt-0.5">74</p>
+              <span class="text-[10px] text-muted">0.4% bounce rate</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 3. Two-Column Row (Chart 2/3 + Stacked Right Cards 1/3) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          
+          <!-- Wide Card (~2/3): Message Performance Multi-line Chart -->
+          <div class="lg:col-span-8 bg-card rounded-brand border border-card-border p-6 shadow-card space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h3 class="text-base font-extrabold text-charcoal">Message Performance</h3>
+                <p class="text-xs text-muted">Last 30 days dispatch telemetry (Example data)</p>
+              </div>
+              
+              <!-- Legend: Slate (Sent), Sage (Delivered), Tan (Read), Muted Red (Failed) -->
+              <div class="flex flex-wrap items-center gap-3 text-xs font-semibold">
+                <span class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-slate-accent"></span> Sent
+                </span>
+                <span class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-status-success"></span> Delivered
+                </span>
+                <span class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-tan-accent"></span> Read
+                </span>
+                <span class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-status-danger"></span> Failed
+                </span>
+              </div>
+            </div>
+
+            <!-- SVG Multi-Line Chart with Dashed Grid & Tooltips -->
+            <div class="relative w-full h-64 bg-canvas/40 rounded-brand-sm border border-card-border/60 p-4 flex flex-col justify-between">
+              
+              <!-- Dashed Background Grid Lines -->
+              <div class="absolute inset-x-4 inset-y-6 flex flex-col justify-between pointer-events-none opacity-40">
+                <div class="border-b border-dashed border-card-border w-full"></div>
+                <div class="border-b border-dashed border-card-border w-full"></div>
+                <div class="border-b border-dashed border-card-border w-full"></div>
+                <div class="border-b border-dashed border-card-border w-full"></div>
+              </div>
+
+              <!-- Interactive Multi-Line SVG -->
+              <svg id="overviewChartSvg" class="w-full h-44 overflow-visible" viewBox="0 0 600 160" preserveAspectRatio="none">
+                <!-- Sent (Slate) -->
+                <path d="M 0 130 Q 100 90, 200 70 T 400 30 T 600 10" fill="none" stroke="#5F7380" stroke-width="3" stroke-linecap="round"/>
+                <!-- Delivered (Sage) -->
+                <path d="M 0 132 Q 100 93, 200 75 T 400 34 T 600 14" fill="none" stroke="#5E8B6E" stroke-width="2.5" stroke-linecap="round"/>
+                <!-- Read (Tan) -->
+                <path d="M 0 142 Q 100 110, 200 90 T 400 48 T 600 30" fill="none" stroke="#A89070" stroke-width="2.5" stroke-linecap="round"/>
+                <!-- Failed (Muted Red) -->
+                <path d="M 0 156 Q 100 155, 200 157 T 400 154 T 600 152" fill="none" stroke="#A5524A" stroke-width="2" stroke-linecap="round"/>
+
+                <!-- Interactive Data points (Hoverable) -->
+                <circle cx="200" cy="70" r="4" fill="#5F7380" class="cursor-pointer hover:r-6 transition-all" data-info="10 Nov: 890 Sent"/>
+                <circle cx="400" cy="30" r="4" fill="#5F7380" class="cursor-pointer hover:r-6 transition-all" data-info="20 Nov: 1,820 Sent"/>
+                <circle cx="600" cy="10" r="4" fill="#5F7380" class="cursor-pointer hover:r-6 transition-all" data-info="28 Nov: 2,150 Sent"/>
+              </svg>
+
+              <!-- X-Axis Labels -->
+              <div class="flex justify-between text-[11px] font-mono text-muted pt-2 border-t border-card-border">
+                <span>01 Nov</span>
+                <span>05 Nov</span>
+                <span>10 Nov</span>
+                <span>15 Nov</span>
+                <span>20 Nov</span>
+                <span>25 Nov</span>
+                <span>28 Nov</span>
+              </div>
+            </div>
+
+            <!-- Chart footer note -->
+            <div class="flex items-center justify-between text-[11px] text-muted">
+              <span>Peak delivery window: 10:00 AM - 12:30 PM IST</span>
+              <span class="font-semibold text-slate-accent">Meta Cloud API Tier 2</span>
+            </div>
+          </div>
+
+          <!-- Right Column (~1/3): Two Stacked Cards -->
+          <div class="lg:col-span-4 space-y-6">
+            
+            <!-- Stacked Card 1: Conversion Rates (4 Circular Progress Rings in 2x2 grid) -->
+            <div class="bg-card rounded-brand border border-card-border p-5 shadow-card space-y-4">
+              <div>
+                <h3 class="text-sm font-extrabold text-charcoal">Conversion Rates</h3>
+                <p class="text-[11px] text-muted">30-day interaction ratios</p>
+              </div>
+
+              <!-- 2x2 Grid of SVG Rings -->
+              <div class="grid grid-cols-2 gap-4">
+                
+                <!-- Ring 1: Delivered (97.4%) -->
+                <div class="p-3 bg-canvas/50 rounded-brand-sm border border-card-border text-center flex flex-col items-center">
+                  <div class="relative w-14 h-14 flex items-center justify-center">
+                    <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                      <path class="text-card-border" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                      <path class="text-status-success" stroke-width="3" stroke-dasharray="97, 100" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    </svg>
+                    <span id="rateRingDelivered" class="absolute text-xs font-black text-charcoal">97%</span>
+                  </div>
+                  <span class="text-[10px] font-bold text-muted uppercase tracking-wider mt-1.5">Delivered</span>
+                </div>
+
+                <!-- Ring 2: Read (84.6%) -->
+                <div class="p-3 bg-canvas/50 rounded-brand-sm border border-card-border text-center flex flex-col items-center">
+                  <div class="relative w-14 h-14 flex items-center justify-center">
+                    <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                      <path class="text-card-border" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                      <path class="text-tan-accent" stroke-width="3" stroke-dasharray="85, 100" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    </svg>
+                    <span id="rateRingRead" class="absolute text-xs font-black text-charcoal">85%</span>
+                  </div>
+                  <span class="text-[10px] font-bold text-muted uppercase tracking-wider mt-1.5">Read</span>
+                </div>
+
+                <!-- Ring 3: Replied (32.1%) -->
+                <div class="p-3 bg-canvas/50 rounded-brand-sm border border-card-border text-center flex flex-col items-center">
+                  <div class="relative w-14 h-14 flex items-center justify-center">
+                    <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                      <path class="text-card-border" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                      <path class="text-slate-accent" stroke-width="3" stroke-dasharray="32, 100" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    </svg>
+                    <span id="rateRingReplied" class="absolute text-xs font-black text-charcoal">32%</span>
+                  </div>
+                  <span class="text-[10px] font-bold text-muted uppercase tracking-wider mt-1.5">Replied</span>
+                </div>
+
+                <!-- Ring 4: Failed (0.4%) -->
+                <div class="p-3 bg-canvas/50 rounded-brand-sm border border-card-border text-center flex flex-col items-center">
+                  <div class="relative w-14 h-14 flex items-center justify-center">
+                    <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                      <path class="text-card-border" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                      <path class="text-status-danger" stroke-width="3" stroke-dasharray="1, 100" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    </svg>
+                    <span id="rateRingFailed" class="absolute text-xs font-black text-status-danger">0.4%</span>
+                  </div>
+                  <span class="text-[10px] font-bold text-muted uppercase tracking-wider mt-1.5">Failed</span>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Stacked Card 2: WhatsApp Connection Details -->
+            <div class="bg-card rounded-brand border border-card-border p-5 shadow-card space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm font-extrabold text-charcoal">WhatsApp Connection</h3>
+                <span id="connStatusBadge" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-status-success/20 text-status-success">
+                  <span class="w-1.5 h-1.5 rounded-full bg-status-success"></span> Connected
+                </span>
+              </div>
+
+              <div class="space-y-2 text-xs divide-y divide-card-border">
+                <div class="pt-1 flex items-center justify-between">
+                  <span class="text-muted">Quality Rating</span>
+                  <span id="connQuality" class="font-bold text-status-success">High Quality - Green Tier</span>
+                </div>
+                <div class="pt-2 flex items-center justify-between">
+                  <span class="text-muted">Phone Status</span>
+                  <span id="connPhone" class="font-bold text-charcoal">+91 98201 54321 • Verified</span>
+                </div>
+                <div class="pt-2 flex items-center justify-between">
+                  <span class="text-muted">Messaging Limit</span>
+                  <span id="connLimit" class="font-bold text-slate-accent">Tier 2: 10,000 msgs/day</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- 4. Lower Section (In exact requested order): -->
+        
+        <!-- Queue Health Card -->
+        <div class="bg-card rounded-brand border border-card-border p-6 shadow-soft space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 class="text-base font-extrabold text-charcoal">Queue Health</h3>
+              <p class="text-xs text-muted">Message broker throughput &amp; delivery statuses (Example data)</p>
+            </div>
+            <span class="text-xs font-semibold text-muted">Workers: 4 Active • Region: ap-south-1</span>
+          </div>
+
+          <!-- 4 Mini Stat Boxes -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="p-3 bg-canvas/60 rounded-brand-sm border border-card-border">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-muted">Total Jobs</span>
+              <p id="queueTotalJobs" class="text-xl font-extrabold text-charcoal mt-0.5">1,248</p>
+            </div>
+            <div class="p-3 bg-canvas/60 rounded-brand-sm border border-card-border">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-muted">Pending</span>
+              <p id="queuePending" class="text-xl font-extrabold text-tan-deep mt-0.5">14</p>
+            </div>
+            <div class="p-3 bg-canvas/60 rounded-brand-sm border border-card-border">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-muted">Processed</span>
+              <p id="queueProcessed" class="text-xl font-extrabold text-slate-accent mt-0.5">1,234</p>
+            </div>
+            <div class="p-3 bg-canvas/60 rounded-brand-sm border border-card-border">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-muted">Avg Process Time</span>
+              <p id="queueAvgTime" class="text-xl font-extrabold text-status-success mt-0.5">420ms</p>
+            </div>
+          </div>
+
+          <!-- Row of Status Tiles with Icon and Rate Pill -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 pt-2">
+            
+            <div class="p-2.5 bg-canvas rounded-brand-sm border border-card-border text-center space-y-1">
+              <i data-lucide="sparkles" class="w-4 h-4 mx-auto text-slate-accent"></i>
+              <p class="text-[10px] font-bold text-muted uppercase">Initiated</p>
+              <p id="tileCount-initiated" class="text-sm font-extrabold text-charcoal">1,248</p>
+              <span class="inline-block px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-card border border-card-border text-muted">100%</span>
+            </div>
+
+            <div class="p-2.5 bg-canvas rounded-brand-sm border border-card-border text-center space-y-1">
+              <i data-lucide="send" class="w-4 h-4 mx-auto text-slate-accent"></i>
+              <p class="text-[10px] font-bold text-muted uppercase">Sent</p>
+              <p id="tileCount-sent" class="text-sm font-extrabold text-charcoal">1,234</p>
+              <span class="inline-block px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-slate-subtle text-slate-accent">98.9%</span>
+            </div>
+
+            <div class="p-2.5 bg-canvas rounded-brand-sm border border-card-border text-center space-y-1">
+              <i data-lucide="clock" class="w-4 h-4 mx-auto text-tan-accent"></i>
+              <p class="text-[10px] font-bold text-muted uppercase">Pending</p>
+              <p id="tileCount-pending" class="text-sm font-extrabold text-tan-deep">14</p>
+              <span class="inline-block px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-tan-subtle text-tan-deep">1.1%</span>
+            </div>
+
+            <div class="p-2.5 bg-canvas rounded-brand-sm border border-card-border text-center space-y-1">
+              <i data-lucide="check-check" class="w-4 h-4 mx-auto text-status-success"></i>
+              <p class="text-[10px] font-bold text-muted uppercase">Delivered</p>
+              <p id="tileCount-delivered" class="text-sm font-extrabold text-charcoal">1,210</p>
+              <span class="inline-block px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-status-success/20 text-status-success">97.0%</span>
+            </div>
+
+            <div class="p-2.5 bg-canvas rounded-brand-sm border border-card-border text-center space-y-1">
+              <i data-lucide="eye" class="w-4 h-4 mx-auto text-tan-accent"></i>
+              <p class="text-[10px] font-bold text-muted uppercase">Read</p>
+              <p id="tileCount-read" class="text-sm font-extrabold text-charcoal">1,032</p>
+              <span class="inline-block px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-tan-subtle text-tan-deep">82.7%</span>
+            </div>
+
+            <div class="p-2.5 bg-canvas rounded-brand-sm border border-card-border text-center space-y-1">
+              <i data-lucide="message-square" class="w-4 h-4 mx-auto text-slate-accent"></i>
+              <p class="text-[10px] font-bold text-muted uppercase">Replied</p>
+              <p id="tileCount-replied" class="text-sm font-extrabold text-charcoal">395</p>
+              <span class="inline-block px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-slate-subtle text-slate-accent">31.7%</span>
+            </div>
+
+            <div class="p-2.5 bg-canvas rounded-brand-sm border border-card-border text-center space-y-1">
+              <i data-lucide="alert-circle" class="w-4 h-4 mx-auto text-status-danger"></i>
+              <p class="text-[10px] font-bold text-muted uppercase">Failed</p>
+              <p id="tileCount-failed" class="text-sm font-extrabold text-status-danger">10</p>
+              <span class="inline-block px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-status-danger/20 text-status-danger">0.8%</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Today's Rate Alerts Card -->
+        <div class="bg-card rounded-brand border border-card-border p-6 shadow-soft space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-base font-extrabold text-charcoal">Today's Rate Alerts</h3>
+                <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-tan-subtle text-tan-deep border border-tan-accent/40">
+                  Daily Bullion Broadcast
+                </span>
+              </div>
+              <p id="overviewRateScheduled" class="text-xs text-muted mt-0.5">
+                Next scheduled send: Today at 10:30 AM IST (in 45 mins)
+              </p>
+            </div>
+            
+            <div class="flex items-center gap-2">
+              <button id="overviewSendTestAlertBtn" class="px-3.5 py-1.5 rounded-brand-sm bg-canvas border border-card-border text-xs font-bold text-charcoal hover:bg-sidebar transition">
+                Send Test to My Phone
+              </button>
+              <button class="nav-item px-3.5 py-1.5 rounded-brand-sm bg-tan-accent text-offwhite text-xs font-bold hover:bg-tan-hover transition shadow-xs" data-view="rate-alerts">
+                Manage Rates
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Active Alerts List -->
+          <div id="overviewRatesContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <!-- Rendered dynamically by app.js -->
+          </div>
+        </div>
+
+        <!-- AI Assistant Card -->
+        <div class="bg-card rounded-brand border border-card-border p-6 shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <h3 class="text-base font-extrabold text-charcoal">AI Assistant Resolution</h3>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-subtle text-slate-accent">
+                Hinglish &amp; Hindi 24/7
+              </span>
+            </div>
+            <p class="text-xs text-muted">
+              <strong id="overviewAiRate" class="text-charcoal font-bold">78.4%</strong> of customer chats resolved without staff intervention.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-brand-sm bg-tan-subtle/80 border border-tan-accent/40 flex items-center gap-2">
+              <i data-lucide="user-exclamation" class="w-4 h-4 text-tan-accent"></i>
+              <span id="overviewNeedsHumanBadge" class="text-xs font-bold text-tan-deep">
+                3 chats waiting for your staff
+              </span>
+            </div>
+            <button class="nav-item px-4 py-2 rounded-brand-sm bg-slate-accent text-offwhite text-xs font-bold hover:bg-slate-hover transition shadow-soft" data-view="inbox" data-sub="needs_human">
+              View Pending Handoffs
+            </button>
+          </div>
+        </div>
+
+        <!-- Recent Activity Feed -->
+        <div class="bg-card rounded-brand border border-card-border p-6 shadow-soft space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-extrabold text-charcoal">Recent Activity</h3>
+            <span class="text-xs text-muted">Realtime event stream (Example data)</span>
+          </div>
+
+          <!-- Activity Items List -->
+          <div id="overviewActivityList" class="space-y-3">
+            <!-- Rendered dynamically by app.js -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- VIEW 2: INBOX (LIVE CHAT) -->
+      <!-- ===================================================================== -->
+      <div id="viewInbox" class="app-view hidden h-[calc(100vh-140px)] flex flex-col">
+        <!-- 3-Column Chat Layout -->
+        <div class="flex-1 grid grid-cols-1 md:grid-cols-12 bg-card rounded-brand border border-card-border overflow-hidden shadow-card">
+          
+          <!-- Column 1: Conversations List (md:col-span-4) -->
+          <div class="md:col-span-4 border-r border-card-border flex flex-col bg-sidebar/50">
+            <!-- Tabs -->
+            <div class="p-3 border-b border-card-border flex items-center gap-1 overflow-x-auto text-xs font-bold">
+              <button class="inbox-filter-tab active px-3 py-1 rounded-full bg-slate-accent text-offwhite" data-filter="all">All</button>
+              <button class="inbox-filter-tab px-3 py-1 rounded-full text-muted hover:text-charcoal hover:bg-canvas" data-filter="needs_human">Needs human</button>
+              <button class="inbox-filter-tab px-3 py-1 rounded-full text-muted hover:text-charcoal hover:bg-canvas" data-filter="unassigned">Unassigned</button>
+              <button class="inbox-filter-tab px-3 py-1 rounded-full text-muted hover:text-charcoal hover:bg-canvas" data-filter="mine">Mine</button>
+            </div>
+
+            <!-- Search Contact -->
+            <div class="p-3 border-b border-card-border">
+              <input 
+                id="inboxContactSearch"
+                type="text" 
+                placeholder="Search chats by name, phone..." 
+                class="w-full px-3 py-1.5 bg-canvas rounded-brand-sm border border-card-border text-xs text-charcoal focus:outline-none focus:ring-1 focus:ring-slate-accent"
+              >
+            </div>
+
+            <!-- Contact List Items -->
+            <div id="inboxContactList" class="flex-1 overflow-y-auto divide-y divide-card-border">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+          </div>
+
+          <!-- Column 2: Chat Thread (md:col-span-5) -->
+          <div class="md:col-span-5 border-r border-card-border flex flex-col bg-canvas/30 justify-between">
+            
+            <!-- Chat Thread Header with AI Takeover Toggle -->
+            <div class="p-3.5 bg-card border-b border-card-border flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5 overflow-hidden">
+                <div id="chatActiveAvatar" class="w-8 h-8 rounded-full bg-slate-accent text-offwhite flex items-center justify-center text-xs font-bold shrink-0">
+                  SA
+                </div>
+                <div class="truncate">
+                  <p id="chatActiveName" class="text-xs font-bold text-charcoal truncate">Smt. Sunita Agarwal</p>
+                  <p id="chatActivePhone" class="text-[10px] text-muted truncate">+91 98290 11223</p>
+                </div>
+              </div>
+
+              <!-- "Take over from AI" Toggle -->
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="text-[10px] font-extrabold uppercase text-muted">AI Auto</span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input id="chatAiToggle" type="checkbox" class="sr-only peer">
+                  <div class="w-9 h-5 bg-card-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-offwhite after:border-card-border after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-tan-accent"></div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Messages Thread Container -->
+            <div id="chatMessagesContainer" class="flex-1 overflow-y-auto p-4 space-y-3 text-xs">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+
+            <!-- Quick Template Snippets Bar -->
+            <div class="px-3 py-1.5 bg-card border-t border-card-border flex items-center gap-1.5 overflow-x-auto text-[11px]">
+              <span class="text-muted font-bold text-[10px] shrink-0">Quick:</span>
+              <button class="quick-reply-btn px-2.5 py-1 rounded bg-canvas border border-card-border text-charcoal hover:bg-sidebar whitespace-nowrap">
+                Today's Gold 22K Rate
+              </button>
+              <button class="quick-reply-btn px-2.5 py-1 rounded bg-canvas border border-card-border text-charcoal hover:bg-sidebar whitespace-nowrap">
+                Showroom Timings
+              </button>
+              <button class="quick-reply-btn px-2.5 py-1 rounded bg-canvas border border-card-border text-charcoal hover:bg-sidebar whitespace-nowrap">
+                UPI Payment QR
+              </button>
+            </div>
+
+            <!-- Message Composer -->
+            <form id="chatComposerForm" class="p-3 bg-card border-t border-card-border flex items-center gap-2">
+              <button type="button" aria-label="Attach File" class="p-2 text-muted hover:text-charcoal rounded-md hover:bg-canvas">
+                <i data-lucide="paperclip" class="w-4 h-4"></i>
+              </button>
+              <input 
+                id="chatMessageInput"
+                type="text" 
+                placeholder="Type your message in Hindi or English..." 
+                class="flex-1 px-3 py-2 bg-canvas rounded-brand-sm border border-card-border text-xs text-charcoal focus:outline-none focus:ring-1 focus:ring-slate-accent"
+              >
+              <button type="submit" aria-label="Send message" class="p-2 rounded-brand-sm bg-slate-accent text-offwhite hover:bg-slate-hover transition">
+                <i data-lucide="send" class="w-4 h-4"></i>
+              </button>
+            </form>
+
+          </div>
+
+          <!-- Column 3: Customer Details Panel (md:col-span-3) -->
+          <div class="md:col-span-3 p-4 bg-sidebar/30 flex flex-col justify-between space-y-4 overflow-y-auto">
+            <div class="space-y-4">
+              <div class="text-center pb-3 border-b border-card-border">
+                <div id="detailsAvatar" class="w-12 h-12 rounded-full bg-slate-accent text-offwhite flex items-center justify-center text-sm font-bold mx-auto mb-2">
+                  SA
+                </div>
+                <h4 id="detailsName" class="text-sm font-bold text-charcoal">Smt. Sunita Agarwal</h4>
+                <p id="detailsPhone" class="text-xs text-muted">+91 98290 11223</p>
+                <p id="detailsCity" class="text-[11px] text-muted">Jaipur (C-Scheme)</p>
+              </div>
+
+              <!-- Tags -->
+              <div>
+                <p class="text-[10px] font-extrabold uppercase tracking-wider text-muted mb-1.5">Tags</p>
+                <div id="detailsTagsContainer" class="flex flex-wrap gap-1.5">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-tan-subtle text-tan-deep border border-tan-accent/40">VIP Client</span>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-subtle text-slate-accent border border-slate-accent/40">Gold Buyer</span>
+                </div>
+              </div>
+
+              <!-- Assignee -->
+              <div>
+                <p class="text-[10px] font-extrabold uppercase tracking-wider text-muted mb-1">Assigned Staff</p>
+                <select id="detailsAssignSelect" class="w-full p-2 text-xs bg-canvas rounded-brand-sm border border-card-border text-charcoal focus:outline-none">
+                  <option value="Rajesh Sharma">Rajesh Sharma (Admin)</option>
+                  <option value="Pooja Verma">Pooja Verma (Store Mgr)</option>
+                  <option value="AI Assistant">AI Assistant (Auto)</option>
+                </select>
+              </div>
+
+              <!-- Notes -->
+              <div>
+                <p class="text-[10px] font-extrabold uppercase tracking-wider text-muted mb-1">Customer Notes</p>
+                <textarea 
+                  id="detailsNotesInput"
+                  rows="3" 
+                  class="w-full p-2 text-xs bg-canvas rounded-brand-sm border border-card-border text-charcoal focus:outline-none"
+                  placeholder="Add notes about budget, preferences..."
+                >Interested in 22K antique bridal necklace set for daughter's wedding in January.</textarea>
+              </div>
+            </div>
+
+            <div>
+              <button id="sendLookbookTemplateBtn" class="w-full py-2.5 rounded-brand-sm bg-tan-accent text-offwhite font-bold text-xs hover:bg-tan-hover transition shadow-xs flex items-center justify-center gap-1.5">
+                <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+                <span>Send WhatsApp Lookbook PDF</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- VIEW 3: BROADCASTS PAGE -->
+      <!-- ===================================================================== -->
+      <div id="viewBroadcasts" class="app-view hidden space-y-8">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card p-6 rounded-brand border border-card-border shadow-soft">
+          <div>
+            <h2 class="text-xl font-extrabold text-charcoal">Meta Cloud API Broadcasts</h2>
+            <p class="text-xs text-muted">Official approved templates • 100% Ban Protection • Delivery telemetry</p>
+          </div>
+          <button id="startBroadcastStepperBtn" class="inline-flex items-center gap-2 px-4 py-2 rounded-brand-sm bg-slate-accent text-offwhite text-xs font-bold hover:bg-slate-hover transition shadow-soft">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Create Campaign</span>
+          </button>
+        </div>
+
+        <!-- Stepper Wizard & Live Smartphone Bezel Preview -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Stepper Form (8 cols) -->
+          <div class="lg:col-span-7 bg-card rounded-brand border border-card-border p-6 shadow-card space-y-6">
+            
+            <!-- Step Indicators -->
+            <div class="flex items-center justify-between border-b border-card-border pb-4">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-slate-accent text-offwhite text-xs font-bold flex items-center justify-center">1</span>
+                <span class="text-xs font-bold text-charcoal">Audience</span>
+              </div>
+              <div class="h-0.5 w-12 bg-card-border"></div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-canvas text-charcoal border border-card-border text-xs font-bold flex items-center justify-center">2</span>
+                <span class="text-xs font-bold text-muted">Template</span>
+              </div>
+              <div class="h-0.5 w-12 bg-card-border"></div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-canvas text-charcoal border border-card-border text-xs font-bold flex items-center justify-center">3</span>
+                <span class="text-xs font-bold text-muted">Schedule</span>
+              </div>
+            </div>
+
+            <!-- Step 1: Audience & CSV Upload -->
+            <div class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-charcoal mb-1">Campaign Name</label>
+                <input 
+                  id="bcCampaignName" 
+                  type="text" 
+                  value="Wedding Season Antique Preview 2026" 
+                  class="w-full p-2.5 bg-canvas rounded-brand-sm border border-card-border text-xs text-charcoal font-semibold focus:outline-none focus:ring-1 focus:ring-slate-accent"
+                >
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-charcoal mb-1">Upload Customer CSV or Select Segment</label>
+                <div class="p-4 bg-canvas rounded-brand-sm border-2 border-dashed border-card-border text-center space-y-2">
+                  <i data-lucide="file-spreadsheet" class="w-8 h-8 text-slate-accent mx-auto"></i>
+                  <p class="text-xs font-semibold text-charcoal">Drag and drop client CSV here</p>
+                  <p class="text-[10px] text-muted">Columns: Name, Phone (with 91), City, Tag</p>
+                  <button type="button" class="px-3 py-1 rounded bg-card border border-card-border text-[11px] font-bold text-charcoal hover:bg-sidebar">
+                    Choose Excel / CSV File
+                  </button>
+                </div>
+                <div class="mt-2 flex items-center justify-between text-xs text-muted">
+                  <span>Selected: <strong>VIP &amp; Gold Buyers (1,420 contacts)</strong></span>
+                  <span class="text-status-success font-bold flex items-center gap-1"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Validated</span>
+                </div>
+              </div>
+
+              <!-- Step 2: Template Selection -->
+              <div>
+                <label class="block text-xs font-bold text-charcoal mb-1">Approved Meta Template</label>
+                <select id="bcTemplateSelect" class="w-full p-2.5 bg-canvas rounded-brand-sm border border-card-border text-xs text-charcoal font-semibold focus:outline-none">
+                  <option value="daily_gold_rate_alert">daily_gold_rate_alert (Marketing / Hinglish)</option>
+                  <option value="wedding_bridal_preview_v2" selected>wedding_bridal_preview_v2 (Marketing / Festive)</option>
+                  <option value="kirana_order_confirmation">kirana_order_confirmation (Utility / Receipts)</option>
+                </select>
+              </div>
+
+              <!-- Step 3: Action Buttons -->
+              <div class="pt-4 border-t border-card-border flex items-center justify-between">
+                <span class="text-xs text-muted">Cost: 1,420 credits (Est. ₹142)</span>
+                <button id="dispatchBroadcastBtn" class="px-6 py-2.5 rounded-brand-sm bg-slate-accent text-offwhite text-xs font-bold hover:bg-slate-hover transition shadow-soft flex items-center gap-2">
+                  <span>Schedule &amp; Dispatch</span>
+                  <i data-lucide="send" class="w-4 h-4"></i>
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Live Phone-style Preview Bezel (5 cols) -->
+          <div class="lg:col-span-5 flex flex-col items-center">
+            <span class="text-xs font-bold text-muted mb-2 uppercase tracking-wider">Live WhatsApp Phone Preview</span>
+            
+            <div class="w-72 bg-charcoal rounded-[36px] p-3 shadow-float border-4 border-card-border/80">
+              <!-- Speaker & Camera Notch -->
+              <div class="w-20 h-4 bg-charcoal-soft rounded-full mx-auto mb-2"></div>
+              
+              <!-- Screen View -->
+              <div class="bg-[#ECE5DD] dark:bg-[#1E2325] rounded-[24px] p-3 min-h-[380px] flex flex-col justify-between text-charcoal">
+                
+                <!-- Chat top bar in phone -->
+                <div class="flex items-center gap-2 pb-2 border-b border-black/10">
+                  <div class="w-7 h-7 rounded-full bg-slate-accent text-offwhite flex items-center justify-center text-[10px] font-bold">
+                    SJ
+                  </div>
+                  <div>
+                    <p class="text-[11px] font-bold text-charcoal leading-tight">Sharma Jewellers</p>
+                    <p class="text-[9px] text-muted leading-tight">Official Business Account</p>
+                  </div>
+                </div>
+
+                <!-- WhatsApp Message Bubble -->
+                <div class="bg-card rounded-brand-sm p-3 shadow-xs space-y-2 text-xs border border-card-border/60">
+                  <p class="font-bold text-charcoal">🌟 Wedding Season 2026 Antique Collection</p>
+                  <p class="text-muted leading-snug">
+                    Namaste Sunita ji! Hamara latest hand-crafted Jadau aur Kundan bridal jewellery collection MI Road showroom me live ho chuka hai.
+                  </p>
+                  <p class="text-charcoal font-semibold">Flat 9% making charges on early bridal bookings this week!</p>
+                  <span class="text-[9px] text-muted block text-right">10:30 AM</span>
+
+                  <!-- WhatsApp CTA Button Inside Bubble -->
+                  <div class="pt-2 border-t border-card-border/60">
+                    <button class="w-full py-1.5 rounded bg-slate-subtle text-slate-accent font-bold text-[11px] text-center flex items-center justify-center gap-1">
+                      <i data-lucide="download" class="w-3 h-3"></i>
+                      <span>View Lookbook PDF (4MB)</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="text-[9px] text-center text-muted">
+                  End-to-end encrypted • Meta Cloud API
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Broadcast History Table -->
+        <div class="bg-card rounded-brand border border-card-border shadow-soft p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-extrabold text-charcoal">Campaign History</h3>
+            <span class="text-xs text-muted">Showing past broadcasts</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-sidebar/50 border-b border-card-border text-muted uppercase font-bold">
+                <tr>
+                  <th class="py-3 px-4">Campaign Name</th>
+                  <th class="py-3 px-4">Template</th>
+                  <th class="py-3 px-4">Recipients</th>
+                  <th class="py-3 px-4">Delivered</th>
+                  <th class="py-3 px-4">Read</th>
+                  <th class="py-3 px-4">Status</th>
+                </tr>
+              </thead>
+              <tbody id="broadcastHistoryTbody" class="divide-y divide-card-border">
+                <!-- Rendered dynamically by app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- VIEW 4: RATE ALERTS PAGE -->
+      <!-- ===================================================================== -->
+      <div id="viewRateAlerts" class="app-view hidden space-y-8">
+        
+        <!-- Header -->
+        <div class="bg-card p-6 rounded-brand border border-card-border shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-xl font-extrabold text-charcoal">Daily Commodity &amp; Rate Alert Manager</h2>
+              <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-tan-subtle text-tan-deep border border-tan-accent/40">
+                Jewellers &amp; Kirana
+              </span>
+            </div>
+            <p class="text-xs text-muted mt-1">
+              Automated morning broadcast with 1-click update. Scheduled for opening bell at 10:30 AM IST.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button id="sendTestRateAlertDirectBtn" class="px-4 py-2 rounded-brand-sm bg-card border border-card-border text-xs font-bold text-charcoal hover:bg-sidebar transition">
+              Send Test to WhatsApp
+            </button>
+            <button id="saveAllRatesBtn" class="px-5 py-2 rounded-brand-sm bg-tan-accent text-offwhite text-xs font-bold hover:bg-tan-hover transition shadow-soft">
+              Update &amp; Broadcast Today's Rates
+            </button>
+          </div>
+        </div>
+
+        <!-- Schedule Settings & Items Editor -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Rates Table Editor (8 cols) -->
+          <div class="lg:col-span-8 bg-card rounded-brand border border-card-border p-6 shadow-card space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-extrabold text-charcoal">Today's Active Commodities</h3>
+              <span class="text-xs text-muted">Click any rate to edit today's market fix</span>
+            </div>
+
+            <!-- Items Table -->
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-sidebar/50 border-b border-card-border text-muted uppercase font-bold">
+                  <tr>
+                    <th class="py-2.5 px-3">Item Name</th>
+                    <th class="py-2.5 px-3">Today's Rate</th>
+                    <th class="py-2.5 px-3">Unit</th>
+                    <th class="py-2.5 px-3">Change (24h)</th>
+                    <th class="py-2.5 px-3">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="rateAlertsEditorTbody" class="divide-y divide-card-border">
+                  <!-- Rendered dynamically by app.js -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Schedule Frequency Controls -->
+            <div class="pt-4 border-t border-card-border grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-charcoal mb-1">Scheduled Broadcast Time</label>
+                <input type="time" value="10:30" class="p-2 bg-canvas rounded-brand-sm border border-card-border text-xs text-charcoal font-semibold focus:outline-none">
+                <span class="text-[10px] text-muted block mt-1">Indian Standard Time (IST)</span>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-charcoal mb-1">Broadcast Days</label>
+                <div class="flex items-center gap-1 text-[11px] font-bold">
+                  <span class="px-2 py-1 rounded bg-slate-accent text-offwhite">Mon</span>
+                  <span class="px-2 py-1 rounded bg-slate-accent text-offwhite">Tue</span>
+                  <span class="px-2 py-1 rounded bg-slate-accent text-offwhite">Wed</span>
+                  <span class="px-2 py-1 rounded bg-slate-accent text-offwhite">Thu</span>
+                  <span class="px-2 py-1 rounded bg-slate-accent text-offwhite">Fri</span>
+                  <span class="px-2 py-1 rounded bg-slate-accent text-offwhite">Sat</span>
+                  <span class="px-2 py-1 rounded bg-canvas border border-card-border text-muted">Sun</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Live WhatsApp Rate Alert Card Preview (4 cols) -->
+          <div class="lg:col-span-4 bg-card rounded-brand border border-card-border p-5 shadow-card space-y-3">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-muted">Formatted WhatsApp Output</h4>
+            
+            <div class="p-4 bg-canvas/80 rounded-brand-sm border border-card-border text-xs font-mono space-y-2 whitespace-pre-line leading-relaxed" id="liveRatePreviewText">
+🌟 *SHARMA JEWELLERS - DAILY GOLD &amp; SILVER RATES* 🌟
+Date: 24 Nov 2026
+• Gold 24K (999): ₹78,450 / 10g (▲ +₹320)
+• Gold 22K (916): ₹71,920 / 10g (▲ +₹290)
+• Silver 999: ₹92,500 / 1 kg (▼ -₹450)
+
+_Making charges flat 9% on all antique necklaces this week!_
+Reply '1' to view bridal lookbook.
+            </div>
+
+            <p class="text-[11px] text-muted italic">
+              Dispatches with official Meta template approval. High read rate ~86%.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- VIEW 5: AI ASSISTANT PAGE -->
+      <!-- ===================================================================== -->
+      <div id="viewAiAssistant" class="app-view hidden space-y-8">
+        
+        <div class="bg-card p-6 rounded-brand border border-card-border shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-extrabold text-charcoal">24/7 Hinglish AI Assistant &amp; Knowledge Base</h2>
+            <p class="text-xs text-muted">Trained on local retail queries with instant staff handoff triggers</p>
+          </div>
+          <button id="saveAiSettingsBtn" class="px-5 py-2 rounded-brand-sm bg-slate-accent text-offwhite text-xs font-bold hover:bg-slate-hover transition shadow-soft">
+            Save AI Settings
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Knowledge & FAQ Configuration (7 cols) -->
+          <div class="lg:col-span-7 bg-card rounded-brand border border-card-border p-6 shadow-card space-y-5">
+            
+            <!-- Tone and Language -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-charcoal mb-1">Primary Conversation Language</label>
+                <select class="w-full p-2.5 bg-canvas rounded-brand-sm border border-card-border text-xs text-charcoal font-semibold focus:outline-none">
+                  <option selected>Hinglish (Natural Roman Hindi + English)</option>
+                  <option>Pure Hindi (Devanagari)</option>
+                  <option>Standard English</option>
+                  <option>Auto-detect Customer Tongue</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-charcoal mb-1">Assistant Tone</label>
+                <select class="w-full p-2.5 bg-canvas rounded-brand-sm border border-card-border text-xs text-charcoal font-semibold focus:outline-none">
+                  <option selected>Polite Indian Shopkeeper (Namaste ji)</option>
+                  <option>Modern Luxury Concierge</option>
+                  <option>Concise &amp; Fast FMCG</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- FAQ Editor -->
+            <div class="space-y-3 pt-3 border-t border-card-border">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-charcoal">Frequently Asked Questions (Shop FAQs)</span>
+                <button type="button" class="text-xs font-bold text-slate-accent hover:underline">+ Add FAQ</button>
+              </div>
+
+              <div class="space-y-2 text-xs">
+                <div class="p-3 bg-canvas rounded-brand-sm border border-card-border space-y-1">
+                  <p class="font-bold text-charcoal">Q: Do you give hallmark certificate?</p>
+                  <p class="text-muted">A: Yes, 100% of our gold jewellery is BIS 916 Hallmarked with laser engraved HUID unique verification code.</p>
+                </div>
+                <div class="p-3 bg-canvas rounded-brand-sm border border-card-border space-y-1">
+                  <p class="font-bold text-charcoal">Q: Can I pay via UPI or Bank Transfer?</p>
+                  <p class="text-muted">A: Yes! We accept UPI (Google Pay, PhonePe, Paytm) and RTGS/NEFT for high value bullion bookings.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Document Upload (UI only) -->
+            <div class="space-y-2 pt-3 border-t border-card-border">
+              <span class="text-xs font-bold text-charcoal">Upload Shop Catalogues &amp; Policies (UI Only)</span>
+              <div class="p-4 bg-canvas rounded-brand-sm border-2 border-dashed border-card-border text-center space-y-1.5">
+                <i data-lucide="file-up" class="w-6 h-6 text-muted mx-auto"></i>
+                <p class="text-xs font-semibold text-charcoal">Upload PDF Price Lists, Bridal Catalogues, or Exchange Policies</p>
+                <p class="text-[10px] text-muted">The AI uses these documents to quote specs and making charge rules.</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- "Test the Bot" Live Simulator Panel (5 cols) -->
+          <div class="lg:col-span-5 bg-card rounded-brand border border-card-border p-5 shadow-card flex flex-col h-[520px] justify-between">
+            <div class="flex items-center justify-between pb-3 border-b border-card-border">
+              <div class="flex items-center gap-2">
+                <i data-lucide="bot" class="w-4 h-4 text-slate-accent"></i>
+                <span class="text-xs font-bold text-charcoal">Test the Bot Simulator</span>
+              </div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-status-success/20 text-status-success">Online</span>
+            </div>
+
+            <!-- Test Chat Stream -->
+            <div id="aiTestChatStream" class="flex-1 overflow-y-auto py-3 space-y-2.5 text-xs">
+              <div class="flex justify-start">
+                <div class="bg-canvas border border-card-border p-2.5 rounded-brand-sm rounded-tl-none max-w-[85%]">
+                  <p class="text-charcoal">Namaste! Main Chirpdesk AI assistant hoon. Mujhse rates, showroom timings ya bridal jewellery ke baare me puchiye.</p>
+                  <span class="text-[9px] text-muted block text-right mt-1">Bot</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Test Chat Input -->
+            <form id="aiTestChatForm" class="pt-3 border-t border-card-border flex items-center gap-2">
+              <input 
+                id="aiTestInput"
+                type="text" 
+                placeholder="Ask e.g. 'Aaj 22K rate kya hai?'" 
+                class="flex-1 px-3 py-2 bg-canvas rounded-brand-sm border border-card-border text-xs text-charcoal focus:outline-none"
+              >
+              <button type="submit" class="px-3 py-2 rounded-brand-sm bg-slate-accent text-offwhite text-xs font-bold hover:bg-slate-hover transition">
+                Send
+              </button>
+            </form>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- VIEW 6: WORKFLOWS PAGE -->
+      <!-- ===================================================================== -->
+      <div id="viewWorkflows" class="app-view hidden space-y-8">
+        
+        <div class="bg-card p-6 rounded-brand border border-card-border shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-extrabold text-charcoal">Visual Workflow Automation</h2>
+            <p class="text-xs text-muted">Node-based triggers, condition branches, and automatic human staff handoff</p>
+          </div>
+          <button id="addWorkflowBtn" class="px-4 py-2 rounded-brand-sm bg-slate-accent text-offwhite text-xs font-bold hover:bg-slate-hover transition shadow-soft">
+            + New Automation Canvas
+          </button>
+        </div>
+
+        <!-- Automation Toggles for Indian Businesses -->
+        <div class="bg-card rounded-brand border border-card-border p-6 shadow-soft space-y-4">
+          <h3 class="text-sm font-extrabold text-charcoal">Quick Business Automation Switches</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+            
+            <div class="p-3.5 bg-canvas rounded-brand-sm border border-card-border flex items-start justify-between">
+              <div>
+                <p class="font-bold text-charcoal">Order Confirmation</p>
+                <p class="text-[11px] text-muted mt-0.5">Instant WhatsApp bill &amp; link</p>
+              </div>
+              <input type="checkbox" checked class="mt-1 rounded text-slate-accent">
+            </div>
+
+            <div class="p-3.5 bg-canvas rounded-brand-sm border border-card-border flex items-start justify-between">
+              <div>
+                <p class="font-bold text-charcoal">Digital Receipt PDF</p>
+                <p class="text-[11px] text-muted mt-0.5">Send HUID hallmark slip</p>
+              </div>
+              <input type="checkbox" checked class="mt-1 rounded text-slate-accent">
+            </div>
+
+            <div class="p-3.5 bg-canvas rounded-brand-sm border border-card-border flex items-start justify-between">
+              <div>
+                <p class="font-bold text-charcoal">Payment Udhar Reminder</p>
+                <p class="text-[11px] text-muted mt-0.5">Friendly khata balance reminder</p>
+              </div>
+              <input type="checkbox" checked class="mt-1 rounded text-slate-accent">
+            </div>
+
+            <div class="p-3.5 bg-canvas rounded-brand-sm border border-card-border flex items-start justify-between">
+              <div>
+                <p class="font-bold text-charcoal">Supplier / Karigar PO</p>
+                <p class="text-[11px] text-muted mt-0.5">Notify maker when stock low</p>
+              </div>
+              <input type="checkbox" class="mt-1 rounded text-slate-accent">
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Visual Node Canvas -->
+        <div class="bg-card rounded-brand border border-card-border p-6 shadow-card space-y-6">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-extrabold text-charcoal">Active Flow: Bridal Enquiry &amp; Escalation</h3>
+            <span class="px-2.5 py-1 rounded-full bg-status-success/20 text-status-success text-xs font-bold">Live Node Graph</span>
+          </div>
+
+          <!-- Interactive Node Pipeline Representation -->
+          <div class="p-6 bg-canvas/40 rounded-brand border border-card-border/80 flex flex-wrap lg:flex-nowrap items-center justify-between gap-4">
+            
+            <!-- Node 1: Trigger -->
+            <div class="p-4 bg-card rounded-brand border-2 border-slate-accent shadow-soft w-full lg:w-56 space-y-1">
+              <span class="px-2 py-0.5 rounded text-[9px] font-extrabold bg-slate-subtle text-slate-accent uppercase">1. Trigger</span>
+              <p class="text-xs font-bold text-charcoal">Customer Sends Keyword</p>
+              <p class="text-[11px] text-muted">Message contains "rate", "catalogue", or "price"</p>
+            </div>
+
+            <i data-lucide="arrow-right" class="w-5 h-5 text-muted hidden lg:block"></i>
+
+            <!-- Node 2: Condition -->
+            <div class="p-4 bg-card rounded-brand border border-card-border shadow-soft w-full lg:w-56 space-y-1">
+              <span class="px-2 py-0.5 rounded text-[9px] font-extrabold bg-canvas text-muted uppercase">2. Condition</span>
+              <p class="text-xs font-bold text-charcoal">Time &amp; Budget Check</p>
+              <p class="text-[11px] text-muted">Is showroom open? (10am - 8:30pm IST)</p>
+            </div>
+
+            <i data-lucide="arrow-right" class="w-5 h-5 text-muted hidden lg:block"></i>
+
+            <!-- Node 3: Action -->
+            <div class="p-4 bg-card rounded-brand border border-card-border shadow-soft w-full lg:w-56 space-y-1">
+              <span class="px-2 py-0.5 rounded text-[9px] font-extrabold bg-status-success/20 text-status-success uppercase">3. Action</span>
+              <p class="text-xs font-bold text-charcoal">Send Dynamic Rate Card</p>
+              <p class="text-[11px] text-muted">Fetch today's 22K/24K rates from DB</p>
+            </div>
+
+            <i data-lucide="arrow-right" class="w-5 h-5 text-muted hidden lg:block"></i>
+
+            <!-- Node 4: Agent Handoff -->
+            <div class="p-4 bg-tan-subtle rounded-brand border-2 border-tan-accent shadow-soft w-full lg:w-60 space-y-1">
+              <span class="px-2 py-0.5 rounded text-[9px] font-extrabold bg-tan-accent text-offwhite uppercase">4. Agent Handoff</span>
+              <p class="text-xs font-bold text-tan-deep">Escalate to Human Staff</p>
+              <p class="text-[11px] text-tan-deep/80">If customer negotiates making charges, ring Rajesh</p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- VIEW 7: CONTACTS & SUBSCRIBERS PAGE -->
+      <!-- ===================================================================== -->
+      <div id="viewContacts" class="app-view hidden space-y-6">
+        <div class="bg-card p-6 rounded-brand border border-card-border shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-extrabold text-charcoal">Audience &amp; Customer Directory</h2>
+            <p class="text-xs text-muted">Verified WhatsApp opt-ins with purchase history &amp; custom tags</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="importCsvModalBtn" class="px-4 py-2 rounded-brand-sm bg-card border border-card-border text-xs font-bold text-charcoal hover:bg-sidebar transition">
+              Import CSV
+            </button>
+            <button id="addNewContactBtn" class="px-4 py-2 rounded-brand-sm bg-slate-accent text-offwhite text-xs font-bold hover:bg-slate-hover transition shadow-soft">
+              + Add Contact
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-card rounded-brand border border-card-border shadow-soft overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-sidebar/50 border-b border-card-border text-muted uppercase font-bold">
+                <tr>
+                  <th class="py-3 px-4">Customer Name</th>
+                  <th class="py-3 px-4">WhatsApp Phone</th>
+                  <th class="py-3 px-4">City</th>
+                  <th class="py-3 px-4">Tags</th>
+                  <th class="py-3 px-4">Assigned To</th>
+                  <th class="py-3 px-4">Status</th>
+                </tr>
+              </thead>
+              <tbody id="contactsTableTbody" class="divide-y divide-card-border">
+                <!-- Rendered dynamically by app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- VIEW 8: TEAM & SETTINGS PAGE -->
+      <!-- ===================================================================== -->
+      <div id="viewSettings" class="app-view hidden space-y-8">
+        
+        <div class="bg-card p-6 rounded-brand border border-card-border shadow-soft">
+          <h2 class="text-xl font-extrabold text-charcoal">Workspace Settings &amp; Meta WABA Credentials</h2>
+          <p class="text-xs text-muted">Credentials and webhooks scoped to this tenant with Row Level Security</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Meta Credentials (8 cols) -->
+          <div class="lg:col-span-8 bg-card rounded-brand border border-card-border p-6 shadow-card space-y-5">
+            <h3 class="text-sm font-extrabold text-charcoal">Official Meta WhatsApp Business Account (WABA)</h3>
+            
+            <div class="space-y-4 text-xs">
+              <div>
+                <label class="block text-muted font-bold mb-1">WhatsApp Business Account (WABA ID)</label>
+                <input id="settingsWabaId" type="text" readonly value="WABA-IND-88492019-SJ (Read-only)" class="w-full p-2.5 bg-canvas rounded-brand-sm border border-card-border font-mono text-charcoal">
+              </div>
+
+              <div>
+                <label class="block text-muted font-bold mb-1">Phone Number ID (Cloud API)</label>
+                <input id="settingsPhoneId" type="text" readonly value="PNID-919820154321-PROD (Read-only)" class="w-full p-2.5 bg-canvas rounded-brand-sm border border-card-border font-mono text-charcoal">
+              </div>
+
+              <div>
+                <label class="block text-muted font-bold mb-1">Webhook Endpoint URL</label>
+                <div class="flex items-center gap-2">
+                  <input type="text" readonly value="https://api.chirpdesk.in/v1/webhooks/meta-cloud-events" class="flex-1 p-2.5 bg-canvas rounded-brand-sm border border-card-border font-mono text-charcoal">
+                  <button id="copyWebhookBtn" class="px-3.5 py-2.5 rounded-brand-sm bg-card border border-card-border text-charcoal font-bold hover:bg-sidebar">
+                    Copy
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-muted font-bold mb-1">API Key (Front-End Placeholder)</label>
+                <input type="text" readonly value="cd_live_pk_8f94a82c9e104b928f (Scoped public token)" class="w-full p-2.5 bg-canvas rounded-brand-sm border border-card-border font-mono text-charcoal">
+              </div>
+            </div>
+          </div>
+
+          <!-- Business Details (4 cols) -->
+          <div class="lg:col-span-4 bg-card rounded-brand border border-card-border p-6 shadow-card space-y-4 text-xs">
+            <h3 class="text-sm font-extrabold text-charcoal">Business Profile (GST)</h3>
+            
+            <div class="space-y-2">
+              <p class="text-muted">Legal Name:</p>
+              <p id="settingsLegalName" class="font-bold text-charcoal">M/s Sharma Jewellers &amp; Sons Pvt. Ltd.</p>
+            </div>
+
+            <div class="space-y-2">
+              <p class="text-muted">GSTIN:</p>
+              <p id="settingsGstin" class="font-bold text-charcoal font-mono">08AABCS1429B1Z8</p>
+            </div>
+
+            <div class="space-y-2">
+              <p class="text-muted">Registered Address:</p>
+              <p id="settingsCity" class="text-charcoal">Johari Bazar, MI Road, Jaipur, Rajasthan</p>
+            </div>
+
+            <div class="pt-3 border-t border-card-border">
+              <p class="text-[11px] text-muted">All invoices billed with 18% GST input tax credit in INR.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- INTERACTIVE TOUR SPOTLIGHT MODAL -->
+  <!-- ========================================================================= -->
+  <div id="tourModal" class="fixed inset-0 z-50 bg-charcoal/60 backdrop-blur-xs hidden flex items-center justify-center p-4">
+    <div class="bg-card rounded-brand border border-card-border shadow-float max-w-lg w-full p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-card-border pb-3">
+        <div class="flex items-center gap-2">
+          <i data-lucide="compass" class="w-5 h-5 text-slate-accent"></i>
+          <span id="tourStepTitle" class="text-sm font-bold text-charcoal">Guided Tour: Overview (Step 1 of 4)</span>
+        </div>
+        <button id="closeTourModalBtn" class="text-muted hover:text-charcoal">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div id="tourStepContent" class="text-xs text-charcoal/90 leading-relaxed space-y-2">
+        <p><strong>Welcome to Chirpdesk!</strong> This dashboard lets you oversee message queues, 30-day delivery rates, and automated morning bullion &amp; grocery rate alerts.</p>
+        <p>Use the workspace switcher in the top bar to toggle between <strong>Sharma Jewellers</strong> and <strong>Gupta General Store</strong>.</p>
+      </div>
+
+      <div class="flex items-center justify-between pt-3 border-t border-card-border">
+        <button id="tourPrevBtn" class="px-3 py-1.5 rounded-brand-sm bg-canvas border border-card-border text-xs font-bold text-charcoal">
+          Previous
+        </button>
+        <button id="tourNextBtn" class="px-4 py-1.5 rounded-brand-sm bg-slate-accent text-offwhite text-xs font-bold">
+          Next Step
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- DEVELOPER API / SUPABASE STATUS MODAL -->
+  <!-- ========================================================================= -->
+  <div id="devModal" class="fixed inset-0 z-50 bg-charcoal/60 backdrop-blur-xs hidden flex items-center justify-center p-4">
+    <div class="bg-card rounded-brand border border-card-border shadow-float max-w-lg w-full p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-card-border pb-3">
+        <div class="flex items-center gap-2">
+          <i data-lucide="database" class="w-5 h-5 text-slate-accent"></i>
+          <span class="text-sm font-bold text-charcoal">Chirpdesk Data Layer &amp; Supabase Status</span>
+        </div>
+        <button id="closeDevModalBtn" class="text-muted hover:text-charcoal">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="text-xs space-y-3">
+        <div class="p-3 bg-canvas rounded-brand-sm border border-card-border space-y-1">
+          <p class="font-bold text-charcoal">Active Mode:</p>
+          <p id="devModeStatus" class="text-status-success font-semibold">Standalone Mock / Offline Mode with LocalStorage Persistence</p>
+        </div>
+
+        <div class="space-y-1">
+          <p class="font-bold text-charcoal">Connecting Real Supabase:</p>
+          <p class="text-muted leading-snug">
+            Open <code class="bg-canvas px-1 rounded">supabase.js</code> and update <code class="bg-canvas px-1 rounded">SUPABASE_CONFIG</code> with your Supabase Project URL and Public Anon Key. Execute <code class="bg-canvas px-1 rounded">supabase-schema.sql</code> in the Supabase SQL Editor.
+          </p>
+        </div>
+
+        <div class="p-3 bg-sidebar rounded-brand-sm border border-card-border font-mono text-[11px] text-muted space-y-1">
+          <p>Tenant Scoping: workspace_id = <span id="devWorkspaceId">ws-sharma-jewellers</span></p>
+          <p>Row Level Security: Enabled</p>
+          <p>Realtime Events: Active</p>
+        </div>
+      </div>
+
+      <div class="text-right pt-2 border-t border-card-border">
+        <button id="devModalOkBtn" class="px-4 py-1.5 rounded-brand-sm bg-slate-accent text-offwhite text-xs font-bold">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="mock-data.js"></script>
+  <script src="supabase.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chirpdesk — WhatsApp AI & Business Automation for Indian Retail</title>
+  <meta name="description" content="Chirpdesk is the multi-tenant WhatsApp AI and business automation SaaS for local shops, jewellers, and kirana stores in India. Official Meta Cloud API.">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind CSS CDN with Mint Slate Theme Configuration -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            canvas: '#DCDFDA',
+            card: '#E8EAE6',
+            'card-border': '#C9CCC6',
+            sidebar: '#D3D6D1',
+            slate: {
+              accent: '#5F7380',
+              hover: '#4E616E',
+              subtle: '#E2E6E8',
+              deep: '#3B4952'
+            },
+            tan: {
+              accent: '#A89070',
+              hover: '#957E60',
+              subtle: '#EFEAE2',
+              deep: '#78644A'
+            },
+            charcoal: {
+              DEFAULT: '#2B2D2E',
+              soft: '#383B3C',
+              surface: '#202223'
+            },
+            muted: {
+              DEFAULT: '#727875',
+              light: '#8F9490',
+              subtle: '#B5BAB7'
+            },
+            status: {
+              success: '#5E8B6E',
+              warning: '#B8893F',
+              danger: '#A5524A'
+            },
+            offwhite: '#F2F4F1'
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Outfit"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          borderRadius: {
+            'brand': '18px',
+            'brand-sm': '14px',
+            'brand-lg': '22px'
+          },
+          boxShadow: {
+            'soft': '0 4px 20px -2px rgba(43, 45, 46, 0.05)',
+            'card': '0 8px 30px -4px rgba(43, 45, 46, 0.07)',
+            'float': '0 12px 36px -6px rgba(43, 45, 46, 0.12)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --canvas: #DCDFDA;
+      --card: #E8EAE6;
+      --border: #C9CCC6;
+      --sidebar: #D3D6D1;
+      --primary: #5F7380;
+      --tan: #A89070;
+      --text: #2B2D2E;
+      --muted: #727875;
+      --offwhite: #F2F4F1;
+    }
+
+    .dark {
+      --canvas: #1A1C1B;
+      --card: #232625;
+      --border: #353937;
+      --sidebar: #1E2120;
+      --primary: #748B99;
+      --tan: #BD9F7E;
+      --text: #E5E8E6;
+      --charcoal: #E5E8E6;
+      --muted: #8E9491;
+      --offwhite: #141615;
+    }
+
+    body {
+      background-color: var(--canvas);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Custom subtle scrollbars */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #D3D6D1;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #B5BAB7;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #8F9490;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-charcoal bg-canvas selection:bg-slate-accent selection:text-offwhite">
+
+  <!-- ========================================================================= -->
+  <!-- 1. DISMISSIBLE ANNOUNCEMENT BANNER -->
+  <!-- ========================================================================= -->
+  <aside id="announcementBanner" aria-label="Product announcement" class="relative z-50 bg-gradient-to-r from-[#4A5D6B] via-[#3E4E5A] to-charcoal text-offwhite text-xs md:text-sm py-2.5 px-4 transition-all duration-300">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2 overflow-hidden">
+        <span class="inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-tan-accent text-charcoal font-semibold text-[11px] tracking-wide shrink-0">
+          NEW
+        </span>
+        <p class="truncate font-medium text-offwhite/95">
+          Meta Cloud API Tier-2 Engine live for Indian Jewellers & Retailers: 10,000 broadcasts/day with zero number bans.
+        </p>
+      </div>
+      <div class="flex items-center gap-3 shrink-0">
+        <a href="#features" class="inline-flex items-center px-3 py-1 rounded-full bg-offwhite text-charcoal font-semibold text-xs hover:bg-[#E2E6E8] transition-colors shadow-sm">
+          Explore Features
+        </a>
+        <button id="closeBannerBtn" type="button" aria-label="Dismiss banner" class="p-1 rounded-full hover:bg-white/10 text-offwhite/80 hover:text-offwhite transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========================================================================= -->
+  <!-- 2. STICKY NAVBAR -->
+  <!-- ========================================================================= -->
+  <header class="sticky top-0 z-40 bg-card/90 backdrop-blur-md border-b border-card-border transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-brand-sm bg-slate-accent flex items-center justify-center text-offwhite shadow-soft group-hover:bg-slate-hover transition-colors">
+          <i data-lucide="message-square-quote" class="w-5 h-5 text-tan-subtle"></i>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-1.5">
+            <span class="text-xl font-bold tracking-tight text-charcoal">Chirpdesk</span>
+            <span class="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded bg-tan-subtle text-tan-deep border border-tan-accent/30">Bharat</span>
+          </div>
+          <span class="text-[11px] font-medium text-muted tracking-tight">WhatsApp AI for Retail</span>
+        </div>
+      </a>
+
+      <!-- Center Links with Dropdowns -->
+      <nav class="hidden md:flex items-center gap-1 lg:gap-2">
+        <!-- Product Dropdown -->
+        <div class="relative group">
+          <button class="inline-flex items-center gap-1 px-3 py-2 rounded-brand-sm text-sm font-semibold text-charcoal/85 hover:text-charcoal hover:bg-canvas transition-colors">
+            Product
+            <i data-lucide="chevron-down" class="w-4 h-4 text-muted group-hover:rotate-180 transition-transform"></i>
+          </button>
+          <div class="absolute top-full left-0 mt-1 w-64 p-2 bg-card rounded-brand border border-card-border shadow-float opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200">
+            <a href="dashboard.html" class="flex items-start gap-3 p-2.5 rounded-brand-sm hover:bg-canvas transition-colors">
+              <i data-lucide="inbox" class="w-5 h-5 text-slate-accent mt-0.5"></i>
+              <div>
+                <p class="text-xs font-semibold text-charcoal">Shared Team Inbox</p>
+                <p class="text-[11px] text-muted">Multi-agent chat on one number</p>
+              </div>
+            </a>
+            <a href="dashboard.html#rate-alerts" class="flex items-start gap-3 p-2.5 rounded-brand-sm hover:bg-canvas transition-colors">
+              <i data-lucide="trending-up" class="w-5 h-5 text-tan-accent mt-0.5"></i>
+              <div>
+                <p class="text-xs font-semibold text-charcoal">Daily Rate Alerts</p>
+                <p class="text-[11px] text-muted">Automated gold & silver broadcasts</p>
+              </div>
+            </a>
+            <a href="dashboard.html#ai-assistant" class="flex items-start gap-3 p-2.5 rounded-brand-sm hover:bg-canvas transition-colors">
+              <i data-lucide="bot" class="w-5 h-5 text-slate-accent mt-0.5"></i>
+              <div>
+                <p class="text-xs font-semibold text-charcoal">24/7 Hinglish AI Bot</p>
+                <p class="text-[11px] text-muted">Auto-answer FAQs with human handoff</p>
+              </div>
+            </a>
+            <a href="dashboard.html#workflows" class="flex items-start gap-3 p-2.5 rounded-brand-sm hover:bg-canvas transition-colors">
+              <i data-lucide="git-branch" class="w-5 h-5 text-tan-accent mt-0.5"></i>
+              <div>
+                <p class="text-xs font-semibold text-charcoal">Order & Receipt Workflows</p>
+                <p class="text-[11px] text-muted">PDF invoices & payment triggers</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Solutions Dropdown -->
+        <div class="relative group">
+          <button class="inline-flex items-center gap-1 px-3 py-2 rounded-brand-sm text-sm font-semibold text-charcoal/85 hover:text-charcoal hover:bg-canvas transition-colors">
+            Solutions
+            <i data-lucide="chevron-down" class="w-4 h-4 text-muted group-hover:rotate-180 transition-transform"></i>
+          </button>
+          <div class="absolute top-full left-0 mt-1 w-64 p-2 bg-card rounded-brand border border-card-border shadow-float opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200">
+            <a href="#usecases" class="flex items-start gap-3 p-2.5 rounded-brand-sm hover:bg-canvas transition-colors">
+              <i data-lucide="gem" class="w-5 h-5 text-tan-accent mt-0.5"></i>
+              <div>
+                <p class="text-xs font-semibold text-charcoal">For Jewellers & Bullion</p>
+                <p class="text-[11px] text-muted">MCX rates & bridal lookbooks</p>
+              </div>
+            </a>
+            <a href="#usecases" class="flex items-start gap-3 p-2.5 rounded-brand-sm hover:bg-canvas transition-colors">
+              <i data-lucide="shopping-bag" class="w-5 h-5 text-slate-accent mt-0.5"></i>
+              <div>
+                <p class="text-xs font-semibold text-charcoal">For Kirana & Supermarkets</p>
+                <p class="text-[11px] text-muted">Grocery lists & delivery bills</p>
+              </div>
+            </a>
+            <a href="#usecases" class="flex items-start gap-3 p-2.5 rounded-brand-sm hover:bg-canvas transition-colors">
+              <i data-lucide="scissors" class="w-5 h-5 text-status-success mt-0.5"></i>
+              <div>
+                <p class="text-xs font-semibold text-charcoal">For Salons & Clinics</p>
+                <p class="text-[11px] text-muted">Booking reminders & rate cards</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Resources Dropdown -->
+        <div class="relative group">
+          <button class="inline-flex items-center gap-1 px-3 py-2 rounded-brand-sm text-sm font-semibold text-charcoal/85 hover:text-charcoal hover:bg-canvas transition-colors">
+            Resources
+            <i data-lucide="chevron-down" class="w-4 h-4 text-muted group-hover:rotate-180 transition-transform"></i>
+          </button>
+          <div class="absolute top-full left-0 mt-1 w-64 p-2 bg-card rounded-brand border border-card-border shadow-float opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200">
+            <a href="#faq" class="flex items-start gap-3 p-2.5 rounded-brand-sm hover:bg-canvas transition-colors">
+              <i data-lucide="help-circle" class="w-5 h-5 text-slate-accent mt-0.5"></i>
+              <div>
+                <p class="text-xs font-semibold text-charcoal">Help & FAQs</p>
+                <p class="text-[11px] text-muted">Meta verification & number guide</p>
+              </div>
+            </a>
+            <a href="#comparison" class="flex items-start gap-3 p-2.5 rounded-brand-sm hover:bg-canvas transition-colors">
+              <i data-lucide="shield-check" class="w-5 h-5 text-status-success mt-0.5"></i>
+              <div>
+                <p class="text-xs font-semibold text-charcoal">Anti-Ban Comparison</p>
+                <p class="text-[11px] text-muted">Official Cloud API vs grey tools</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Pricing Link -->
+        <a href="#pricing" class="px-3 py-2 rounded-brand-sm text-sm font-semibold text-charcoal/85 hover:text-charcoal hover:bg-canvas transition-colors">
+          Pricing
+        </a>
+      </nav>
+
+      <!-- Right Actions -->
+      <div class="flex items-center gap-3">
+        <!-- Contact Pill -->
+        <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-canvas border border-card-border text-xs">
+          <i data-lucide="phone-call" class="w-3.5 h-3.5 text-slate-accent"></i>
+          <span class="font-semibold text-charcoal">+91 98201 54321</span>
+          <span class="text-[11px] text-muted hidden xl:inline">• Mon-Sat 10am-7pm IST</span>
+        </div>
+
+        <!-- Sign in -->
+        <a href="login.html" class="text-sm font-semibold text-charcoal hover:text-slate-accent transition-colors px-2 py-1">
+          Sign in
+        </a>
+
+        <!-- CTA Dark Pill -->
+        <a href="login.html?mode=signup" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-charcoal text-offwhite text-sm font-semibold hover:bg-charcoal-soft transition shadow-soft">
+          <span>Start free trial</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+
+        <!-- Mobile hamburger -->
+        <button id="mobileMenuBtn" aria-label="Toggle mobile menu" class="md:hidden p-2 rounded-brand-sm text-charcoal hover:bg-canvas">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Nav Drawer -->
+    <div id="mobileMenu" class="hidden md:hidden border-t border-card-border bg-card px-4 pt-3 pb-6 space-y-3">
+      <div class="flex flex-col space-y-1">
+        <a href="dashboard.html" class="px-3 py-2 rounded-brand-sm font-semibold text-sm hover:bg-canvas">Dashboard Overview</a>
+        <a href="#usecases" class="px-3 py-2 rounded-brand-sm font-semibold text-sm hover:bg-canvas">Retail Solutions</a>
+        <a href="#features" class="px-3 py-2 rounded-brand-sm font-semibold text-sm hover:bg-canvas">Features</a>
+        <a href="#pricing" class="px-3 py-2 rounded-brand-sm font-semibold text-sm hover:bg-canvas">Pricing in INR</a>
+        <a href="#faq" class="px-3 py-2 rounded-brand-sm font-semibold text-sm hover:bg-canvas">FAQs</a>
+      </div>
+      <div class="pt-2 border-t border-card-border flex flex-col gap-2">
+        <a href="login.html" class="w-full text-center py-2 text-sm font-semibold rounded-brand-sm bg-canvas border border-card-border">Sign in</a>
+        <a href="login.html?mode=signup" class="w-full text-center py-2 text-sm font-semibold rounded-brand-sm bg-charcoal text-offwhite">Start free trial</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========================================================================= -->
+    <!-- 3. HERO SECTION (TWO COLUMNS) -->
+    <!-- ========================================================================= -->
+    <section class="relative pt-10 pb-16 lg:pt-16 lg:pb-24 overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          
+          <!-- Left Column (Hero Content) -->
+          <div class="lg:col-span-6 space-y-6">
+            
+            <!-- Headline across 3 lines with accent color on line 3 -->
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-charcoal leading-[1.12]">
+              WhatsApp Automation<br>
+              &amp; 24/7 AI Assistant<br>
+              <span class="text-slate-accent">for India's Local Retail.</span>
+            </h1>
+
+            <!-- Paragraph with key fact in bold -->
+            <p class="text-base sm:text-lg text-charcoal/85 leading-relaxed max-w-xl">
+              Equip your showroom or store with automated daily gold &amp; grocery rate alerts, digital bill receipts, and Hindi-Hinglish AI customer support on your official business number — <strong>with zero risk of phone number bans</strong> through official Meta Cloud API infrastructure.
+            </p>
+
+            <!-- Dual CTA Buttons -->
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <a href="login.html" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-slate-accent text-offwhite font-bold text-sm sm:text-base hover:bg-slate-hover transition shadow-card">
+                <span>Start 14-day free trial</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </a>
+              <a href="#demo-lead" class="inline-flex items-center gap-2 px-5 py-3.5 rounded-full bg-card border border-card-border text-charcoal font-semibold text-sm sm:text-base hover:bg-sidebar transition">
+                <i data-lucide="play-circle" class="w-4 h-4 text-tan-accent"></i>
+                <span>Try instant demo</span>
+              </a>
+            </div>
+
+            <!-- Social-proof placeholder (No fake ratings/reviews) -->
+            <div class="flex items-center gap-2 text-xs font-semibold text-muted pt-1">
+              <i data-lucide="shield-check" class="w-4 h-4 text-status-success"></i>
+              <span>Built in India for local shops • Multi-tenant architecture with Row-Level Security</span>
+            </div>
+
+            <!-- Bordered Stat Strip with 3 divided stats -->
+            <div class="grid grid-cols-3 divide-x divide-card-border bg-card rounded-brand border border-card-border p-4 shadow-soft">
+              <div class="px-2 text-center sm:text-left">
+                <p class="text-xs font-medium text-muted uppercase tracking-wider">Starting at</p>
+                <p class="text-xl sm:text-2xl font-extrabold text-charcoal mt-0.5">₹999<span class="text-xs font-normal text-muted">/mo</span></p>
+                <p class="text-[11px] text-muted">GST input credit</p>
+              </div>
+              <div class="px-2 text-center sm:text-left">
+                <p class="text-xs font-medium text-muted uppercase tracking-wider">Go Live In</p>
+                <p class="text-xl sm:text-2xl font-extrabold text-slate-accent mt-0.5">5 Mins</p>
+                <p class="text-[11px] text-muted">Keep existing SIM</p>
+              </div>
+              <div class="px-2 text-center sm:text-left">
+                <p class="text-xs font-medium text-muted uppercase tracking-wider">Free Credits</p>
+                <p class="text-xl sm:text-2xl font-extrabold text-tan-accent mt-0.5">500</p>
+                <p class="text-[11px] text-muted">No card needed</p>
+              </div>
+            </div>
+
+            <!-- Wrapping row of small chip badges -->
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-card border border-card-border text-[11px] font-semibold text-charcoal">
+                <i data-lucide="credit-card" class="w-3 h-3 text-slate-accent"></i> No card needed
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-card border border-card-border text-[11px] font-semibold text-charcoal">
+                <i data-lucide="receipt" class="w-3 h-3 text-tan-accent"></i> GST invoice in INR
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-card border border-card-border text-[11px] font-semibold text-charcoal">
+                <i data-lucide="languages" class="w-3 h-3 text-status-success"></i> Hindi + Hinglish AI
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-card border border-card-border text-[11px] font-semibold text-charcoal">
+                <i data-lucide="lock" class="w-3 h-3 text-muted"></i> Meta Cloud API Verified
+              </span>
+            </div>
+
+          </div>
+
+          <!-- Right Column (Interactive Browser-Window Mockup with Tab Switcher) -->
+          <div class="lg:col-span-6">
+            <div class="relative mx-auto max-w-xl lg:max-w-none">
+              
+              <!-- Tab Switcher Pill above mockup -->
+              <div class="flex items-center justify-center sm:justify-start gap-1 p-1 mb-3 bg-card border border-card-border rounded-full w-fit mx-auto lg:mx-0 shadow-soft">
+                <button class="hero-tab-btn active px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all bg-slate-accent text-offwhite shadow-sm" data-tab="inbox">
+                  Team Inbox
+                </button>
+                <button class="hero-tab-btn px-3.5 py-1.5 rounded-full text-xs font-semibold text-charcoal hover:bg-canvas transition-all" data-tab="rates">
+                  Rate Alerts
+                </button>
+                <button class="hero-tab-btn px-3.5 py-1.5 rounded-full text-xs font-semibold text-charcoal hover:bg-canvas transition-all" data-tab="broadcasts">
+                  Broadcasts
+                </button>
+                <button class="hero-tab-btn px-3.5 py-1.5 rounded-full text-xs font-semibold text-charcoal hover:bg-canvas transition-all" data-tab="bot">
+                  AI Assistant
+                </button>
+              </div>
+
+              <!-- Browser Window Mockup -->
+              <div class="relative bg-card rounded-brand border border-card-border shadow-float overflow-hidden">
+                
+                <!-- Browser Header (3 dots + URL bar) -->
+                <div class="bg-sidebar px-4 py-2.5 border-b border-card-border flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#D97D75]"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#E5B56E]"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#7CAE8D]"></span>
+                  </div>
+                  <div class="flex-1 max-w-xs mx-auto bg-canvas/80 px-3 py-0.5 rounded-md text-[11px] font-mono text-muted text-center border border-card-border/60 flex items-center justify-center gap-1.5">
+                    <i data-lucide="lock" class="w-3 h-3 text-status-success"></i>
+                    <span>app.chirpdesk.in/overview</span>
+                  </div>
+                  <div class="flex items-center gap-2 text-muted">
+                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                  </div>
+                </div>
+
+                <!-- Mockup Dynamic Body Content -->
+                <div id="heroMockupBody" class="p-4 sm:p-5 min-h-[380px] bg-canvas/40 flex flex-col justify-between">
+                  <!-- Default View: Team Inbox View -->
+                  <div id="tabContentInbox" class="hero-tab-content space-y-3">
+                    <div class="flex items-center justify-between pb-2 border-b border-card-border">
+                      <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-slate-accent text-offwhite flex items-center justify-center text-xs font-bold">SA</div>
+                        <div>
+                          <p class="text-xs font-bold text-charcoal">Smt. Sunita Agarwal</p>
+                          <p class="text-[10px] text-muted">+91 98290 11223 • Jaipur</p>
+                        </div>
+                      </div>
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-tan-subtle text-tan-deep border border-tan-accent/30">
+                        Needs Human
+                      </span>
+                    </div>
+
+                    <!-- Chat Bubbles -->
+                    <div class="space-y-2.5 py-1 text-xs">
+                      <div class="flex justify-start">
+                        <div class="max-w-[85%] bg-card border border-card-border p-2.5 rounded-brand-sm rounded-tl-none">
+                          <p class="text-charcoal">Namaste Sharma ji! Aaj ka 22K hallmarked rate kya chal raha hai? Bridal necklace sets stock me hain kya?</p>
+                          <span class="text-[9px] text-muted block text-right mt-1">10:14 AM</span>
+                        </div>
+                      </div>
+
+                      <div class="flex justify-end">
+                        <div class="max-w-[85%] bg-slate-subtle border border-slate-accent/30 p-2.5 rounded-brand-sm rounded-tr-none">
+                          <p class="text-charcoal font-medium">Namaste Sunita ji! 🙏 Aaj 22K Hallmark Gold rate ₹71,920/10g hai. Showroom me bridal lookbooks ready hain. Kya lookbook PDF bhejein?</p>
+                          <span class="text-[9px] text-slate-accent block text-right mt-1">10:15 AM • AI Bot</span>
+                        </div>
+                      </div>
+
+                      <div class="flex justify-start">
+                        <div class="max-w-[85%] bg-card border border-card-border p-2.5 rounded-brand-sm rounded-tl-none">
+                          <p class="text-charcoal">Haan please send kijiye 45g me. Aur making charge pe discount milega?</p>
+                          <span class="text-[9px] text-muted block text-right mt-1">10:18 AM</span>
+                        </div>
+                      </div>
+
+                      <div class="p-2 rounded-brand-sm bg-tan-subtle/80 border border-tan-accent/30 text-[11px] text-tan-deep flex items-center gap-2">
+                        <i data-lucide="user-check" class="w-4 h-4 shrink-0 text-tan-accent"></i>
+                        <span>AI handoff triggered: Rajesh Sharma took over the chat.</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Rate Alerts View (hidden initially) -->
+                  <div id="tabContentRates" class="hero-tab-content hidden space-y-3">
+                    <div class="flex items-center justify-between pb-2 border-b border-card-border">
+                      <p class="text-xs font-bold text-charcoal">Today's Daily Rate Broadcast</p>
+                      <span class="text-[10px] font-semibold text-status-success">1,420 Subscribed</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                      <div class="p-2.5 bg-card rounded-brand-sm border border-card-border">
+                        <span class="text-[10px] text-muted uppercase">Gold 24K (999)</span>
+                        <p class="text-base font-extrabold text-charcoal mt-0.5">₹78,450</p>
+                        <span class="text-[10px] text-status-success font-medium">▲ +₹320 today</span>
+                      </div>
+                      <div class="p-2.5 bg-card rounded-brand-sm border border-card-border">
+                        <span class="text-[10px] text-muted uppercase">Gold 22K (916)</span>
+                        <p class="text-base font-extrabold text-charcoal mt-0.5">₹71,920</p>
+                        <span class="text-[10px] text-status-success font-medium">▲ +₹290 today</span>
+                      </div>
+                      <div class="p-2.5 bg-card rounded-brand-sm border border-card-border">
+                        <span class="text-[10px] text-muted uppercase">Silver 999 (1kg)</span>
+                        <p class="text-base font-extrabold text-charcoal mt-0.5">₹92,500</p>
+                        <span class="text-[10px] text-status-danger font-medium">▼ -₹450 today</span>
+                      </div>
+                      <div class="p-2.5 bg-card rounded-brand-sm border border-card-border flex flex-col justify-center items-center text-center">
+                        <button class="w-full py-2 bg-slate-accent text-offwhite text-xs font-semibold rounded-md">Send 10:30 AM</button>
+                      </div>
+                    </div>
+                    <p class="text-[11px] text-muted italic">Automated morning WhatsApp broadcast to all bullion & bridal customers with 1-click update.</p>
+                  </div>
+
+                  <!-- Broadcasts View (hidden initially) -->
+                  <div id="tabContentBroadcasts" class="hero-tab-content hidden space-y-3">
+                    <div class="flex items-center justify-between pb-2 border-b border-card-border">
+                      <p class="text-xs font-bold text-charcoal">Meta Cloud API Broadcasts</p>
+                      <span class="text-[10px] font-semibold text-slate-accent">100% Meta Verified</span>
+                    </div>
+                    <div class="space-y-2 text-xs">
+                      <div class="p-2.5 bg-card rounded-brand-sm border border-card-border flex items-center justify-between">
+                        <div>
+                          <p class="font-bold text-charcoal">Wedding Antique Collection</p>
+                          <p class="text-[10px] text-muted">1,420 Recipients • Meta Template</p>
+                        </div>
+                        <div class="text-right">
+                          <span class="text-[11px] font-bold text-status-success">98.7% Delivered</span>
+                          <span class="text-[9px] text-muted block">86.2% Read</span>
+                        </div>
+                      </div>
+                      <div class="p-2.5 bg-card rounded-brand-sm border border-card-border flex items-center justify-between">
+                        <div>
+                          <p class="font-bold text-charcoal">Dhanteras Advance Coin Booking</p>
+                          <p class="text-[10px] text-muted">3,850 Recipients • Hindi & Hinglish</p>
+                        </div>
+                        <div class="text-right">
+                          <span class="text-[11px] font-bold text-status-success">99.2% Delivered</span>
+                          <span class="text-[9px] text-muted block">91.4% Read</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- AI Bot View (hidden initially) -->
+                  <div id="tabContentBot" class="hero-tab-content hidden space-y-3">
+                    <div class="flex items-center justify-between pb-2 border-b border-card-border">
+                      <p class="text-xs font-bold text-charcoal">Hinglish Natural NLP Assistant</p>
+                      <span class="text-[10px] font-semibold text-status-success">78.4% Auto-Resolved</span>
+                    </div>
+                    <div class="p-3 bg-card rounded-brand-sm border border-card-border text-xs space-y-1.5">
+                      <p class="font-semibold text-charcoal">Sample Customer Query:</p>
+                      <p class="italic text-muted">"Bhaiya showroom kab tak khula hai aur kya purana sona exchange karte ho?"</p>
+                      <hr class="border-card-border my-1.5">
+                      <p class="font-semibold text-slate-accent">Chirpdesk Bot Answer:</p>
+                      <p class="text-charcoal">"Namaste ji! Showroom raat 8:30 baje tak open hai. Ji bilkul, 100% accurate caratometer testing ke sath purana sona exchange hota hai!"</p>
+                    </div>
+                  </div>
+
+                  <!-- Footer strip inside mockup -->
+                  <div class="mt-4 pt-2 border-t border-card-border flex items-center justify-between text-[11px] text-muted">
+                    <span>Workspace: Sharma Jewellers</span>
+                    <span class="font-medium text-status-success flex items-center gap-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-status-success animate-pulse"></span>
+                      Realtime Active
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Floating Overlays on top of Mockup -->
+                <div class="absolute top-12 right-4 bg-card/95 backdrop-blur-sm border border-card-border px-3 py-1.5 rounded-full shadow-soft flex items-center gap-2 pointer-events-none">
+                  <span class="w-2 h-2 rounded-full bg-status-success animate-ping"></span>
+                  <span class="text-[11px] font-bold text-charcoal">Connected • Official API</span>
+                </div>
+
+                <div class="absolute bottom-10 left-4 bg-card/95 backdrop-blur-sm border border-card-border px-3 py-1.5 rounded-brand-sm shadow-soft flex items-center gap-2 pointer-events-none">
+                  <i data-lucide="users" class="w-3.5 h-3.5 text-slate-accent"></i>
+                  <span class="text-[11px] font-semibold text-charcoal">Shared Team Inbox (3 Staff Online)</span>
+                </div>
+
+              </div>
+
+              <!-- Caption underneath -->
+              <p class="text-center text-xs text-muted mt-3">
+                Product UI with example data • Configured for Indian local business workflows
+              </p>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 4. QUICK ANSWER CALLOUT -->
+    <!-- ========================================================================= -->
+    <section class="py-8 bg-canvas">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-card rounded-brand border border-card-border border-l-8 border-l-slate-accent p-6 sm:p-8 shadow-soft">
+          <p class="text-xs font-extrabold uppercase tracking-widest text-slate-accent mb-2">
+            Quick Answer: What is Chirpdesk?
+          </p>
+          <p class="text-base sm:text-lg text-charcoal leading-relaxed font-medium">
+            Chirpdesk is a dedicated WhatsApp automation and AI platform built specifically for Indian local merchants—such as jewellers, kirana stores, and retail retailers. Instead of using fragile unofficial WhatsApp web tools that trigger permanent number bans, Chirpdesk connects your shop directly to the <strong>official Meta Cloud API</strong>. It lets you send automated morning rate alerts, answer inquiries 24/7 in natural Hindi or Hinglish, distribute digital bill receipts, and collaborate with your entire sales team from a single verified number.
+          </p>
+          <div class="mt-4 pt-3 border-t border-card-border flex flex-wrap items-center justify-between text-xs text-muted gap-2">
+            <span>Pricing starts at ₹999/month with GST input invoice in INR.</span>
+            <span>Last updated: November 2026</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 5. LEAD CAPTURE CARD (INSTANT WHATSAPP DEMO) -->
+    <!-- ========================================================================= -->
+    <section id="demo-lead" class="py-12 bg-canvas">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-card rounded-brand border border-card-border border-l-8 border-l-tan-accent p-6 sm:p-10 shadow-card">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-tan-deep block mb-1">
+            Instant WhatsApp Demo
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-charcoal tracking-tight">
+            Experience a sample customer alert on your own phone.
+          </h2>
+          <p class="text-sm sm:text-base text-charcoal/80 mt-2">
+            Enter your WhatsApp number to receive an interactive sample bullion rate alert and automated Hinglish chatbot response right now.
+          </p>
+
+          <!-- Input + Button on one row -->
+          <form id="leadCaptureForm" class="mt-6 flex flex-col sm:flex-row items-stretch gap-3">
+            <div class="relative flex-1">
+              <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-sm font-bold text-muted pointer-events-none">
+                +91
+              </span>
+              <input 
+                id="leadPhoneInput"
+                type="tel" 
+                required 
+                maxlength="10"
+                placeholder="98201 54321" 
+                class="w-full pl-14 pr-4 py-3.5 bg-canvas rounded-brand-sm border border-card-border text-charcoal placeholder-muted font-medium focus:outline-none focus:ring-2 focus:ring-slate-accent"
+              >
+            </div>
+            <button 
+              type="submit" 
+              class="px-6 py-3.5 rounded-brand-sm bg-charcoal text-offwhite font-bold text-sm hover:bg-charcoal-soft transition shadow-soft flex items-center justify-center gap-2 shrink-0"
+            >
+              <span>Send me a sample message</span>
+              <i data-lucide="send" class="w-4 h-4 text-tan-accent"></i>
+            </button>
+          </form>
+
+          <!-- Consent text -->
+          <p class="text-xs text-muted mt-3">
+            By clicking, you agree to receive an automated one-time test WhatsApp message. No spam, no marketing calls, ever.
+          </p>
+
+          <!-- Feedback notification container -->
+          <div id="leadFeedback" class="hidden mt-4 p-3 rounded-brand-sm bg-status-success/15 border border-status-success/30 text-xs font-semibold text-status-success flex items-center gap-2">
+            <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i>
+            <span>Sample message queued! Check your WhatsApp in 10-15 seconds. (Simulated test message)</span>
+          </div>
+
+          <!-- Trust chips row -->
+          <div class="mt-6 pt-4 border-t border-card-border flex flex-wrap items-center gap-4 text-xs font-semibold text-muted">
+            <span class="flex items-center gap-1.5"><i data-lucide="shield" class="w-3.5 h-3.5 text-slate-accent"></i> Official Meta Cloud Tech Provider Standards</span>
+            <span class="flex items-center gap-1.5"><i data-lucide="lock" class="w-3.5 h-3.5 text-tan-accent"></i> End-to-End Encrypted</span>
+            <span class="flex items-center gap-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-status-success"></i> Instant Response Engine</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 6. PRODUCT SHOWCASE (TWO SIDE-BY-SIDE BROWSER FRAMES) -->
+    <!-- ========================================================================= -->
+    <section class="py-16 bg-canvas">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <span class="text-xs font-bold uppercase tracking-widest text-slate-accent">[ ARCHITECTURE &amp; AUTOMATION ]</span>
+          <h2 class="text-3xl font-extrabold text-charcoal mt-1 tracking-tight">Built for scale, verified for delivery.</h2>
+          <p class="text-sm sm:text-base text-muted mt-2">Engineered to handle high-frequency morning rushes and complex multi-step shop workflows.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          
+          <!-- Mockup 1: Queue & Delivery Stats -->
+          <div class="relative bg-card rounded-brand border border-card-border shadow-card overflow-hidden flex flex-col justify-between group">
+            <div class="bg-sidebar px-4 py-2.5 border-b border-card-border flex items-center justify-between">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#D97D75]"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-[#E5B56E]"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-[#7CAE8D]"></span>
+              </div>
+              <span class="text-[11px] font-mono text-muted">Queue &amp; Delivery Engine</span>
+              <span class="text-[10px] font-semibold text-status-success">Avg 420ms</span>
+            </div>
+
+            <!-- Content preview -->
+            <div class="p-6 space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-xs font-bold uppercase tracking-wider text-muted">Realtime Dispatch Queue</p>
+                  <p class="text-2xl font-extrabold text-charcoal mt-0.5">18,450 <span class="text-xs font-normal text-muted">Sent today (Example data)</span></p>
+                </div>
+                <span class="px-2.5 py-1 rounded-full bg-status-success/20 text-status-success text-xs font-bold">98.9% Success</span>
+              </div>
+
+              <!-- Mini Stat Tiles Row -->
+              <div class="grid grid-cols-4 gap-2 text-center">
+                <div class="p-2 bg-canvas rounded-brand-sm border border-card-border">
+                  <span class="text-[10px] text-muted block">Initiated</span>
+                  <span class="text-xs font-bold text-charcoal">1,248</span>
+                </div>
+                <div class="p-2 bg-canvas rounded-brand-sm border border-card-border">
+                  <span class="text-[10px] text-muted block">Processed</span>
+                  <span class="text-xs font-bold text-slate-accent">1,234</span>
+                </div>
+                <div class="p-2 bg-canvas rounded-brand-sm border border-card-border">
+                  <span class="text-[10px] text-muted block">Pending</span>
+                  <span class="text-xs font-bold text-tan-accent">14</span>
+                </div>
+                <div class="p-2 bg-canvas rounded-brand-sm border border-card-border">
+                  <span class="text-[10px] text-muted block">Failed</span>
+                  <span class="text-xs font-bold text-status-danger">10</span>
+                </div>
+              </div>
+
+              <!-- Delivery Progress Bar -->
+              <div class="space-y-1.5 pt-2">
+                <div class="flex justify-between text-xs font-semibold text-muted">
+                  <span>Batch Delivery Rate</span>
+                  <span class="text-charcoal font-bold">97.4% Delivered to phone</span>
+                </div>
+                <div class="w-full h-2.5 rounded-full bg-canvas overflow-hidden flex">
+                  <div class="bg-status-success h-full" style="width: 82%"></div>
+                  <div class="bg-tan-accent h-full" style="width: 15%"></div>
+                  <div class="bg-status-danger h-full" style="width: 3%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Play button at bottom right -->
+            <div class="p-4 bg-sidebar/50 border-t border-card-border flex items-center justify-between">
+              <span class="text-xs font-medium text-muted">Click to view live queue dashboard</span>
+              <a href="dashboard.html" class="w-8 h-8 rounded-full bg-slate-accent text-offwhite flex items-center justify-center hover:bg-slate-hover transition shadow-soft">
+                <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Mockup 2: Visual Workflow Builder -->
+          <div class="relative bg-card rounded-brand border border-card-border shadow-card overflow-hidden flex flex-col justify-between group">
+            <div class="bg-sidebar px-4 py-2.5 border-b border-card-border flex items-center justify-between">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#D97D75]"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-[#E5B56E]"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-[#7CAE8D]"></span>
+              </div>
+              <span class="text-[11px] font-mono text-muted">Visual Automation Canvas</span>
+              <span class="text-[10px] font-semibold text-slate-accent">Agent Handoff Active</span>
+            </div>
+
+            <!-- Content preview -->
+            <div class="p-6 space-y-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-xs font-bold uppercase tracking-wider text-muted">Multi-Branch Flow</p>
+                  <p class="text-base font-extrabold text-charcoal">Jewellery Inquiry &amp; Receipt Pipeline</p>
+                </div>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-canvas border border-card-border text-muted">Node v2.1</span>
+              </div>
+
+              <!-- Nodes preview visual -->
+              <div class="flex items-center justify-between gap-1 text-[11px] font-semibold py-2">
+                <div class="p-2 bg-canvas rounded-brand-sm border border-slate-accent/40 text-center w-24">
+                  <span class="text-[9px] text-slate-accent uppercase block">Trigger</span>
+                  Customer "Hi"
+                </div>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-muted shrink-0"></i>
+                <div class="p-2 bg-canvas rounded-brand-sm border border-card-border text-center w-24">
+                  <span class="text-[9px] text-muted uppercase block">AI NLP</span>
+                  Check Intent
+                </div>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-muted shrink-0"></i>
+                <div class="p-2 bg-tan-subtle rounded-brand-sm border border-tan-accent text-center w-28">
+                  <span class="text-[9px] text-tan-deep uppercase block">Handoff</span>
+                  Assign Rajesh
+                </div>
+              </div>
+
+              <div class="p-2.5 rounded-brand-sm bg-canvas border border-card-border text-xs text-muted flex items-center gap-2">
+                <i data-lucide="check-circle" class="w-4 h-4 text-status-success shrink-0"></i>
+                <span>Automated fallback: If customer asks for making charge discounts, instantly rings staff on duty.</span>
+              </div>
+            </div>
+
+            <!-- Play button at bottom right -->
+            <div class="p-4 bg-sidebar/50 border-t border-card-border flex items-center justify-between">
+              <span class="text-xs font-medium text-muted">Interactive workflow editor</span>
+              <a href="dashboard.html#workflows" class="w-8 h-8 rounded-full bg-tan-accent text-offwhite flex items-center justify-center hover:bg-tan-hover transition shadow-soft">
+                <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 7. DARK FULL-WIDTH BAND SECTION -->
+    <!-- ========================================================================= -->
+    <section class="py-16 bg-charcoal text-offwhite">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-charcoal-soft border border-offwhite/10 text-xs font-semibold text-tan-subtle">
+          <i data-lucide="zap" class="w-3.5 h-3.5 text-tan-accent"></i>
+          Built for Local Indian Commerce
+        </span>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight max-w-4xl mx-auto leading-tight">
+          Turn your shop's WhatsApp from a chaotic personal chat into an organized, high-revenue customer engine.
+        </h2>
+        <p class="text-base sm:text-lg text-offwhite/80 max-w-2xl mx-auto">
+          One verified number. Multiple staff logins. Automated morning rate alerts. Full GST billing transparency in INR.
+        </p>
+
+        <!-- Feature strip -->
+        <div class="pt-6 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto text-left">
+          <div class="p-3 bg-charcoal-soft/60 rounded-brand-sm border border-offwhite/10">
+            <p class="text-xs font-bold text-tan-accent">Meta Cloud API</p>
+            <p class="text-[11px] text-offwhite/70 mt-0.5">100% compliant, zero number blocks</p>
+          </div>
+          <div class="p-3 bg-charcoal-soft/60 rounded-brand-sm border border-offwhite/10">
+            <p class="text-xs font-bold text-tan-accent">98%+ Delivery</p>
+            <p class="text-[11px] text-offwhite/70 mt-0.5">Direct fiber routing to Meta servers</p>
+          </div>
+          <div class="p-3 bg-charcoal-soft/60 rounded-brand-sm border border-offwhite/10">
+            <p class="text-xs font-bold text-tan-accent">Hindi + Hinglish</p>
+            <p class="text-[11px] text-offwhite/70 mt-0.5">Trained on local retail dialogues</p>
+          </div>
+          <div class="p-3 bg-charcoal-soft/60 rounded-brand-sm border border-offwhite/10">
+            <p class="text-xs font-bold text-tan-accent">GST Invoicing</p>
+            <p class="text-[11px] text-offwhite/70 mt-0.5">Claim full 18% input credit</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 8. USE-CASE SECTION -->
+    <!-- ========================================================================= -->
+    <section id="usecases" class="py-20 bg-canvas">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Eyebrow & 2-line heading with second line in accent -->
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <p class="text-xs font-extrabold uppercase tracking-widest text-slate-accent">[ SCENARIOS / 03 ]</p>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-charcoal mt-1 tracking-tight">
+            Engineered for India's Local Commerce.<br>
+            <span class="text-slate-accent">Real-world workflows for high-touch retailers.</span>
+          </h2>
+          <p class="text-sm sm:text-base text-muted mt-3">
+            See how jewellers, general stores, and service businesses automate their everyday communications.
+          </p>
+        </div>
+
+        <!-- 3 Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <!-- Card 1: Jewellers -->
+          <div class="bg-card rounded-brand border border-card-border p-6 sm:p-8 shadow-card flex flex-col justify-between hover:-translate-y-1 transition duration-200">
+            <div>
+              <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-tan-subtle text-tan-deep border border-tan-accent/40 mb-4">
+                <i data-lucide="gem" class="w-3.5 h-3.5 text-tan-accent"></i>
+                Jewellers &amp; Bullion Merchants
+              </span>
+              <p class="text-3xl sm:text-4xl font-extrabold text-charcoal tracking-tight mt-1">₹42,000</p>
+              <p class="text-xs font-semibold text-muted uppercase tracking-wider mt-1 mb-4">Average bridal inquiry basket (Example data)</p>
+              <p class="text-sm text-charcoal/85 leading-relaxed">
+                Daily 22K/24K gold rates broadcasted automatically every morning at 10:30 AM. Customers reply directly to browse bridal lookbooks or lock booking rates before prices fluctuate.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-card-border flex items-center justify-between text-[11px] text-muted">
+              <span>Automated rate sync</span>
+              <span class="font-semibold text-slate-accent">Illustrative scenario</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Kirana & General Stores -->
+          <div class="bg-card rounded-brand border border-card-border p-6 sm:p-8 shadow-card flex flex-col justify-between hover:-translate-y-1 transition duration-200">
+            <div>
+              <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-slate-subtle text-slate-accent border border-slate-accent/40 mb-4">
+                <i data-lucide="shopping-cart" class="w-3.5 h-3.5 text-slate-accent"></i>
+                Kirana &amp; General Stores
+              </span>
+              <p class="text-3xl sm:text-4xl font-extrabold text-charcoal tracking-tight mt-1">3.8x</p>
+              <p class="text-xs font-semibold text-muted uppercase tracking-wider mt-1 mb-4">Faster order confirmation (Example data)</p>
+              <p class="text-sm text-charcoal/85 leading-relaxed">
+                Customers send grocery lists in Hinglish or voice notes. Chirpdesk formats the bill, calculates the total, and dispatches delivery alerts with dynamic UPI QR codes.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-card-border flex items-center justify-between text-[11px] text-muted">
+              <span>Hinglish voice parsing</span>
+              <span class="font-semibold text-slate-accent">Illustrative scenario</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Clinics and Salons -->
+          <div class="bg-card rounded-brand border border-card-border p-6 sm:p-8 shadow-card flex flex-col justify-between hover:-translate-y-1 transition duration-200">
+            <div>
+              <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-status-success/20 text-status-success border border-status-success/40 mb-4">
+                <i data-lucide="calendar" class="w-3.5 h-3.5 text-status-success"></i>
+                Clinics &amp; Salons
+              </span>
+              <p class="text-3xl sm:text-4xl font-extrabold text-charcoal tracking-tight mt-1">91%</p>
+              <p class="text-xs font-semibold text-muted uppercase tracking-wider mt-1 mb-4">Appointment show-up rate (Example data)</p>
+              <p class="text-sm text-charcoal/85 leading-relaxed">
+                Automated booking confirmations, calendar reminders 2 hours prior, and seasonal service rate cards sent directly on WhatsApp with zero manual phone calling.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-card-border flex items-center justify-between text-[11px] text-muted">
+              <span>Calendar automation</span>
+              <span class="font-semibold text-slate-accent">Illustrative scenario</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 9. FEATURE GRID -->
+    <!-- ========================================================================= -->
+    <section id="features" class="py-20 bg-canvas">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-slate-accent">[ COMPLETE PLATFORM ]</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-charcoal mt-1 tracking-tight">Everything your shop needs on WhatsApp.</h2>
+          <p class="text-sm sm:text-base text-muted mt-2">Replace disparate personal phones and risky browser plugins with enterprise stability.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <!-- Feature 1 -->
+          <div class="bg-card rounded-brand border border-card-border p-6 shadow-soft hover:shadow-card transition">
+            <div class="w-12 h-12 rounded-brand-sm bg-slate-subtle text-slate-accent flex items-center justify-center mb-4">
+              <i data-lucide="bot" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-charcoal">AI replies 24/7</h3>
+            <p class="text-sm text-charcoal/80 mt-2 leading-relaxed">
+              Responds naturally in Hindi, Hinglish, and English to shop timings, pricing, and directions. Seamlessly escalates complex questions to your team.
+            </p>
+          </div>
+
+          <!-- Feature 2 -->
+          <div class="bg-card rounded-brand border border-card-border p-6 shadow-soft hover:shadow-card transition">
+            <div class="w-12 h-12 rounded-brand-sm bg-tan-subtle text-tan-accent flex items-center justify-center mb-4">
+              <i data-lucide="trending-up" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-charcoal">Daily rate alerts</h3>
+            <p class="text-sm text-charcoal/80 mt-2 leading-relaxed">
+              Broadcast Gold 22K/24K, Silver, or grocery rates to thousands of subscribed buyers with 1-click update. Scheduled for exact market opening times.
+            </p>
+          </div>
+
+          <!-- Feature 3 -->
+          <div class="bg-card rounded-brand border border-card-border p-6 shadow-soft hover:shadow-card transition">
+            <div class="w-12 h-12 rounded-brand-sm bg-slate-subtle text-slate-accent flex items-center justify-center mb-4">
+              <i data-lucide="send" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-charcoal">Bulk broadcasts</h3>
+            <p class="text-sm text-charcoal/80 mt-2 leading-relaxed">
+              Upload customer CSV lists and dispatch festive deals or new arrivals via official Meta Cloud API with 100% ban protection and high delivery rates.
+            </p>
+          </div>
+
+          <!-- Feature 4 -->
+          <div class="bg-card rounded-brand border border-card-border p-6 shadow-soft hover:shadow-card transition">
+            <div class="w-12 h-12 rounded-brand-sm bg-tan-subtle text-tan-accent flex items-center justify-center mb-4">
+              <i data-lucide="users" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-charcoal">Team inbox</h3>
+            <p class="text-sm text-charcoal/80 mt-2 leading-relaxed">
+              Up to 10 staff members can chat with customers simultaneously from the same shop number. Tag chats, assign leads, and leave internal private notes.
+            </p>
+          </div>
+
+          <!-- Feature 5 -->
+          <div class="bg-card rounded-brand border border-card-border p-6 shadow-soft hover:shadow-card transition">
+            <div class="w-12 h-12 rounded-brand-sm bg-slate-subtle text-slate-accent flex items-center justify-center mb-4">
+              <i data-lucide="store" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-charcoal">Multi-shop workspaces</h3>
+            <p class="text-sm text-charcoal/80 mt-2 leading-relaxed">
+              Manage multiple branch stores (e.g. Jaipur, Delhi, Indore) under a single admin dashboard with strict data segregation and permission controls.
+            </p>
+          </div>
+
+          <!-- Feature 6 -->
+          <div class="bg-card rounded-brand border border-card-border p-6 shadow-soft hover:shadow-card transition">
+            <div class="w-12 h-12 rounded-brand-sm bg-status-success/20 text-status-success flex items-center justify-center mb-4">
+              <i data-lucide="receipt" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-charcoal">Order &amp; receipt notifications</h3>
+            <p class="text-sm text-charcoal/80 mt-2 leading-relaxed">
+              Connect POS billing software via simple webhooks to send instant PDF invoices, dispatch updates, and gentle payment balance reminders.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 10. COMPARISON TABLE -->
+    <!-- ========================================================================= -->
+    <section id="comparison" class="py-20 bg-canvas">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-14">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-slate-accent">[ WHY CHIRPDESK? ]</span>
+          <h2 class="text-3xl font-extrabold text-charcoal mt-1 tracking-tight">How Chirpdesk compares to typical alternatives.</h2>
+          <p class="text-sm text-muted mt-2">Why Indian retail merchants choose official Meta Cloud API over grey-market tools.</p>
+        </div>
+
+        <div class="bg-card rounded-brand border border-card-border shadow-card overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead>
+                <tr class="border-b border-card-border bg-sidebar/50 text-xs font-extrabold uppercase tracking-wider text-charcoal">
+                  <th class="py-4 px-6">Capability / Feature</th>
+                  <th class="py-4 px-6 bg-slate-subtle/70 text-slate-accent font-black text-sm">
+                    Chirpdesk (Official)
+                  </th>
+                  <th class="py-4 px-6 text-muted font-bold">Typical Alternatives (Unofficial/Manual)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-card-border">
+                <tr>
+                  <td class="py-4 px-6 font-semibold text-charcoal">WhatsApp Infrastructure</td>
+                  <td class="py-4 px-6 bg-slate-subtle/50 font-bold text-slate-accent flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4 text-status-success"></i> Official Meta Cloud API
+                  </td>
+                  <td class="py-4 px-6 text-muted">Unofficial Chromium browser extensions</td>
+                </tr>
+                <tr>
+                  <td class="py-4 px-6 font-semibold text-charcoal">SIM / Phone Ban Risk</td>
+                  <td class="py-4 px-6 bg-slate-subtle/50 font-bold text-status-success flex items-center gap-2">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-status-success"></i> Zero Ban Risk (Meta verified)
+                  </td>
+                  <td class="py-4 px-6 text-status-danger font-medium">High Risk (Banned within 30-60 days)</td>
+                </tr>
+                <tr>
+                  <td class="py-4 px-6 font-semibold text-charcoal">Daily Bullion / Rate Alert Engine</td>
+                  <td class="py-4 px-6 bg-slate-subtle/50 font-bold text-charcoal flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4 text-status-success"></i> Built-in 1-Click Rate Scheduler
+                  </td>
+                  <td class="py-4 px-6 text-muted">Manual broadcast lists (limit 256 contacts)</td>
+                </tr>
+                <tr>
+                  <td class="py-4 px-6 font-semibold text-charcoal">Hindi &amp; Hinglish AI Understanding</td>
+                  <td class="py-4 px-6 bg-slate-subtle/50 font-bold text-charcoal flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4 text-status-success"></i> Native 24/7 NLP Bot + Handoff
+                  </td>
+                  <td class="py-4 px-6 text-muted">Rigid keyword bots or manual typing</td>
+                </tr>
+                <tr>
+                  <td class="py-4 px-6 font-semibold text-charcoal">Team Collaboration</td>
+                  <td class="py-4 px-6 bg-slate-subtle/50 font-bold text-charcoal flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4 text-status-success"></i> Multi-agent shared inbox
+                  </td>
+                  <td class="py-4 px-6 text-muted">Single phone passed around staff</td>
+                </tr>
+                <tr>
+                  <td class="py-4 px-6 font-semibold text-charcoal">Indian Billing &amp; GST Invoicing</td>
+                  <td class="py-4 px-6 bg-slate-subtle/50 font-bold text-charcoal flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4 text-status-success"></i> INR Billing with GST input credit
+                  </td>
+                  <td class="py-4 px-6 text-muted">USD credit card billing with forex fee</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p-4 bg-sidebar/40 border-t border-card-border text-[11px] text-muted">
+            * Footnote: Based on standard Meta Cloud API operational criteria. Example comparison for informational purposes.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 11. PRICING PREVIEW -->
+    <!-- ========================================================================= -->
+    <section id="pricing" class="py-20 bg-canvas">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-slate-accent">[ TRANSPARENT PRICING ]</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-charcoal mt-1 tracking-tight">Fair INR plans with GST input invoice.</h2>
+          <p class="text-sm sm:text-base text-muted mt-2">No hidden international transaction fees. All plans include official Meta Cloud API connectivity.</p>
+
+          <!-- Billing Frequency Toggle -->
+          <div class="mt-8 inline-flex items-center gap-3 p-1.5 bg-card border border-card-border rounded-full shadow-soft">
+            <button id="billingMonthlyBtn" class="px-5 py-2 rounded-full text-xs font-bold transition-all bg-charcoal text-offwhite">
+              Monthly
+            </button>
+            <button id="billingAnnualBtn" class="px-5 py-2 rounded-full text-xs font-bold transition-all text-charcoal hover:bg-canvas flex items-center gap-1.5">
+              <span>Annual</span>
+              <span class="px-2 py-0.5 rounded-full bg-tan-subtle text-tan-deep text-[10px] font-extrabold">Save 20%</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3 Plan Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+          
+          <!-- Free Trial Plan -->
+          <div class="bg-card rounded-brand border border-card-border p-8 shadow-soft flex flex-col justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-muted">Evaluation</span>
+              <h3 class="text-2xl font-extrabold text-charcoal mt-1">14-Day Free Trial</h3>
+              <p class="text-xs text-muted mt-1">For new shops testing WhatsApp automation</p>
+              
+              <div class="my-6">
+                <span class="text-4xl font-black text-charcoal">₹0</span>
+                <span class="text-xs text-muted block mt-1">14 days full access • 500 test credits</span>
+              </div>
+
+              <ul class="space-y-3 text-xs text-charcoal/90 pt-2 border-t border-card-border">
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-status-success"></i> 500 Free conversation credits</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-status-success"></i> 1 Connected WhatsApp Business Number</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-status-success"></i> Basic Daily Rate Alerts (1 group)</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-status-success"></i> Hinglish AI auto-replies (100 chats)</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-status-success"></i> Single user team inbox</li>
+              </ul>
+            </div>
+
+            <div class="mt-8 pt-4">
+              <a href="login.html?mode=signup" class="w-full py-3 block text-center rounded-brand-sm bg-canvas border border-card-border font-bold text-xs text-charcoal hover:bg-sidebar transition">
+                Start 14-Day Free Trial
+              </a>
+            </div>
+          </div>
+
+          <!-- Starter Plan (Highlighted) -->
+          <div class="bg-card rounded-brand border-2 border-slate-accent p-8 shadow-card flex flex-col justify-between relative">
+            <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-slate-accent text-offwhite text-[11px] font-bold tracking-wide shadow-sm">
+              Most Popular for Retail
+            </span>
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-accent">Standard Retail</span>
+              <h3 class="text-2xl font-extrabold text-charcoal mt-1">Starter</h3>
+              <p class="text-xs text-muted mt-1">Ideal for growing kirana &amp; single store retailers</p>
+              
+              <div class="my-6">
+                <span id="starterPrice" class="text-4xl font-black text-charcoal">₹999</span>
+                <span id="starterPeriod" class="text-xs text-muted block mt-1">per month + 18% GST</span>
+              </div>
+
+              <ul class="space-y-3 text-xs text-charcoal/90 pt-2 border-t border-card-border">
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-status-success"></i> <strong>2,500 WhatsApp credits</strong> / month</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-status-success"></i> Unlimited Daily Rate &amp; Offer broadcasts</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-status-success"></i> 24/7 Smart Hinglish + Hindi AI Bot</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-status-success"></i> Shared Team Inbox (up to 3 staff logins)</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-status-success"></i> Automated Order Confirmation &amp; Receipts</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-status-success"></i> Excel / CSV Contact Import with tags</li>
+              </ul>
+            </div>
+
+            <div class="mt-8 pt-4">
+              <a href="login.html?plan=starter" class="w-full py-3 block text-center rounded-brand-sm bg-slate-accent font-bold text-xs text-offwhite hover:bg-slate-hover transition shadow-soft">
+                Choose Starter Plan
+              </a>
+            </div>
+          </div>
+
+          <!-- Pro Plan -->
+          <div class="bg-card rounded-brand border border-card-border p-8 shadow-soft flex flex-col justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-tan-accent">High Volume &amp; Bullion</span>
+              <h3 class="text-2xl font-extrabold text-charcoal mt-1">Pro Bullion</h3>
+              <p class="text-xs text-muted mt-1">For premier jewellers &amp; multi-store brands</p>
+              
+              <div class="my-6">
+                <span id="proPrice" class="text-4xl font-black text-charcoal">₹2,499</span>
+                <span id="proPeriod" class="text-xs text-muted block mt-1">per month + 18% GST</span>
+              </div>
+
+              <ul class="space-y-3 text-xs text-charcoal/90 pt-2 border-t border-card-border">
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-status-success"></i> <strong>10,000 WhatsApp credits</strong> / month</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-status-success"></i> Scheduled Multi-Slot Daily Rate Alerts</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-status-success"></i> Custom Visual Node Workflow Builder</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-status-success"></i> Multi-agent Shared Inbox (10 team logins)</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-status-success"></i> Catalog &amp; Lookbook PDF auto-delivery</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-status-success"></i> Dedicated WhatsApp Onboarding Specialist</li>
+              </ul>
+            </div>
+
+            <div class="mt-8 pt-4">
+              <a href="login.html?plan=pro" class="w-full py-3 block text-center rounded-brand-sm bg-charcoal font-bold text-xs text-offwhite hover:bg-charcoal-soft transition shadow-soft">
+                Choose Pro Plan
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 12. FAQ ACCORDION -->
+    <!-- ========================================================================= -->
+    <section id="faq" class="py-20 bg-canvas">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-14">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-slate-accent">[ QUESTIONS &amp; ANSWERS ]</span>
+          <h2 class="text-3xl font-extrabold text-charcoal mt-1 tracking-tight">Frequently Asked Questions</h2>
+          <p class="text-sm text-muted mt-2">Clear answers on WhatsApp Business API, Indian shop requirements, and setup.</p>
+        </div>
+
+        <div class="space-y-3" id="faqAccordion">
+          
+          <!-- Item 1 -->
+          <div class="faq-item bg-card rounded-brand border border-card-border overflow-hidden">
+            <button class="faq-question w-full p-5 text-left font-bold text-sm sm:text-base text-charcoal flex items-center justify-between gap-4">
+              <span>Will my WhatsApp number get banned if I send bulk messages?</span>
+              <i data-lucide="chevron-down" class="w-4 h-4 text-muted shrink-0 transition-transform"></i>
+            </button>
+            <div class="faq-answer px-5 pb-5 text-xs sm:text-sm text-charcoal/80 leading-relaxed hidden">
+              No. Chirpdesk connects your business directly to the official <strong>Meta Cloud API</strong>. Unlike unofficial Chrome plugins that simulate desktop clicks and lead to permanent WhatsApp bans, Chirpdesk adheres to Meta's verified opt-in framework and template approval guidelines. Your number is protected by official Meta tier limits.
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="faq-item bg-card rounded-brand border border-card-border overflow-hidden">
+            <button class="faq-question w-full p-5 text-left font-bold text-sm sm:text-base text-charcoal flex items-center justify-between gap-4">
+              <span>Do I need a new SIM card or can I use my existing shop number?</span>
+              <i data-lucide="chevron-down" class="w-4 h-4 text-muted shrink-0 transition-transform"></i>
+            </button>
+            <div class="faq-answer px-5 pb-5 text-xs sm:text-sm text-charcoal/80 leading-relaxed hidden">
+              You can use your existing shop mobile number or a new virtual landline/mobile number. If you migrate an existing number currently registered on the WhatsApp Business consumer app, you simply delete the personal app account and bind it to Chirpdesk's official Meta Cloud portal in less than 5 minutes.
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="faq-item bg-card rounded-brand border border-card-border overflow-hidden">
+            <button class="faq-question w-full p-5 text-left font-bold text-sm sm:text-base text-charcoal flex items-center justify-between gap-4">
+              <span>Does the AI really understand natural Hinglish and Hindi messages?</span>
+              <i data-lucide="chevron-down" class="w-4 h-4 text-muted shrink-0 transition-transform"></i>
+            </button>
+            <div class="faq-answer px-5 pb-5 text-xs sm:text-sm text-charcoal/80 leading-relaxed hidden">
+              Yes! Chirpdesk's AI engine is tuned specifically on real Indian retail conversations. Phrases like <em>"Bhaiya aaj ka 22K rate kya hai?"</em>, <em>"Making charge me discount doge kya?"</em>, or <em>"10kg atta ghar pe deliver kar do"</em> are parsed accurately. If a customer demands negotiation or complex custom work, the AI automatically transfers the chat to your staff.
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="faq-item bg-card rounded-brand border border-card-border overflow-hidden">
+            <button class="faq-question w-full p-5 text-left font-bold text-sm sm:text-base text-charcoal flex items-center justify-between gap-4">
+              <span>How do daily gold and silver rate alerts work for jewellers?</span>
+              <i data-lucide="chevron-down" class="w-4 h-4 text-muted shrink-0 transition-transform"></i>
+            </button>
+            <div class="faq-answer px-5 pb-5 text-xs sm:text-sm text-charcoal/80 leading-relaxed hidden">
+              Every morning when market opens, you simply enter today's 24K, 22K, 18K and Silver rates on your Chirpdesk dashboard (or use our automated MCX sync feed). Click "Send Today's Rates" and thousands of registered customers receive a crisp, formatted WhatsApp message with your branding in seconds.
+            </div>
+          </div>
+
+          <!-- Item 5 -->
+          <div class="faq-item bg-card rounded-brand border border-card-border overflow-hidden">
+            <button class="faq-question w-full p-5 text-left font-bold text-sm sm:text-base text-charcoal flex items-center justify-between gap-4">
+              <span>Do you provide a proper GST tax invoice in Indian Rupees (INR)?</span>
+              <i data-lucide="chevron-down" class="w-4 h-4 text-muted shrink-0 transition-transform"></i>
+            </button>
+            <div class="faq-answer px-5 pb-5 text-xs sm:text-sm text-charcoal/80 leading-relaxed hidden">
+              Yes, Chirpdesk is an Indian entity. All subscription invoices are generated in Indian Rupees (INR) with your shop's GSTIN clearly printed so you can claim 100% of the 18% GST input tax credit (ITC) on your monthly GSTR-3B filings.
+            </div>
+          </div>
+
+          <!-- Item 6 -->
+          <div class="faq-item bg-card rounded-brand border border-card-border overflow-hidden">
+            <button class="faq-question w-full p-5 text-left font-bold text-sm sm:text-base text-charcoal flex items-center justify-between gap-4">
+              <span>Can multiple staff members reply to customers at the same time?</span>
+              <i data-lucide="chevron-down" class="w-4 h-4 text-muted shrink-0 transition-transform"></i>
+            </button>
+            <div class="faq-answer px-5 pb-5 text-xs sm:text-sm text-charcoal/80 leading-relaxed hidden">
+              Yes! Your shop owner, store manager, and sales executives can all log into Chirpdesk simultaneously from their own laptops or mobile browsers. Each message sent shows which agent responded, with private internal notes visible only to your team.
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 13. FINAL CTA BAND -->
+    <!-- ========================================================================= -->
+    <section class="py-16 bg-card border-y border-card-border">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-subtle text-slate-accent text-xs font-bold">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+          Get Started in 5 Minutes
+        </span>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-charcoal tracking-tight max-w-3xl mx-auto">
+          Ready to automate your shop on WhatsApp?
+        </h2>
+        <p class="text-base sm:text-lg text-charcoal/80 max-w-2xl mx-auto">
+          Start your 14-day free trial today. Connect your official number, configure daily rate alerts, and let our Hinglish AI assist your customers 24/7.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
+          <a href="login.html?mode=signup" class="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-slate-accent text-offwhite font-bold text-base hover:bg-slate-hover transition shadow-card">
+            <span>Start 14-day free trial</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+          <a href="https://wa.me/919820154321?text=Hi%20Chirpdesk%2C%20I%20want%20a%20live%20demo%20for%20my%20shop" target="_blank" class="inline-flex items-center gap-2 px-6 py-4 rounded-full bg-canvas border border-card-border text-charcoal font-bold text-base hover:bg-sidebar transition">
+            <i data-lucide="message-circle" class="w-5 h-5 text-status-success"></i>
+            <span>Chat with us on WhatsApp</span>
+          </a>
+        </div>
+
+        <p class="text-xs text-muted">No credit card required • Instant setup • Dedicated Indian support</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- 14. FOOTER -->
+  <!-- ========================================================================= -->
+  <footer class="bg-sidebar border-t border-card-border pt-16 pb-12 text-xs text-muted">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-10 pb-12 border-b border-card-border">
+        
+        <!-- Brand blurb -->
+        <div class="md:col-span-2 space-y-4">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-brand-sm bg-slate-accent flex items-center justify-center text-offwhite">
+              <i data-lucide="message-square-quote" class="w-4 h-4 text-tan-subtle"></i>
+            </div>
+            <span class="text-lg font-bold text-charcoal tracking-tight">Chirpdesk</span>
+          </div>
+          <p class="text-xs text-charcoal/70 leading-relaxed max-w-sm">
+            Chirpdesk is India's dedicated WhatsApp AI &amp; business automation SaaS built for retail merchants, bullion dealers, kirana stores, and local commerce.
+          </p>
+          <div class="space-y-1 text-[11px] text-muted">
+            <p>Official Meta Cloud API Verified Tech Provider Standards.</p>
+            <p>Compliant with Indian IT Act 2000 &amp; DPDP Guidelines.</p>
+          </div>
+        </div>
+
+        <!-- Links Column 1: Product -->
+        <div class="space-y-3">
+          <p class="text-xs font-bold uppercase tracking-wider text-charcoal">Product</p>
+          <ul class="space-y-2">
+            <li><a href="dashboard.html" class="hover:text-charcoal transition">Shared Team Inbox</a></li>
+            <li><a href="dashboard.html#rate-alerts" class="hover:text-charcoal transition">Daily Rate Alerts</a></li>
+            <li><a href="dashboard.html#broadcasts" class="hover:text-charcoal transition">Meta Bulk Broadcasts</a></li>
+            <li><a href="dashboard.html#ai-assistant" class="hover:text-charcoal transition">Hinglish AI Bot</a></li>
+            <li><a href="dashboard.html#workflows" class="hover:text-charcoal transition">Workflow Automation</a></li>
+          </ul>
+        </div>
+
+        <!-- Links Column 2: Solutions -->
+        <div class="space-y-3">
+          <p class="text-xs font-bold uppercase tracking-wider text-charcoal">Solutions</p>
+          <ul class="space-y-2">
+            <li><a href="#usecases" class="hover:text-charcoal transition">Jewellers &amp; Bullion</a></li>
+            <li><a href="#usecases" class="hover:text-charcoal transition">Kirana &amp; Supermarkets</a></li>
+            <li><a href="#usecases" class="hover:text-charcoal transition">Clinics &amp; Salons</a></li>
+            <li><a href="#usecases" class="hover:text-charcoal transition">Textile &amp; Garments</a></li>
+          </ul>
+        </div>
+
+        <!-- Links Column 3: Legal & Company -->
+        <div class="space-y-3">
+          <p class="text-xs font-bold uppercase tracking-wider text-charcoal">Company &amp; Legal</p>
+          <ul class="space-y-2">
+            <li><a href="#faq" class="hover:text-charcoal transition">Privacy Policy</a></li>
+            <li><a href="#faq" class="hover:text-charcoal transition">Terms of Service</a></li>
+            <li><a href="#faq" class="hover:text-charcoal transition">Meta Compliance Policy</a></li>
+            <li><a href="#faq" class="hover:text-charcoal transition">Refund &amp; Cancellation</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-muted">
+        <p>© 2026 Chirpdesk Technologies Pvt. Ltd. All rights reserved.</p>
+        <div class="flex items-center gap-4">
+          <span>Made with ♥ in India for Bharat's merchants</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- 15. FLOATING CHAT WIDGET (BOTTOM-RIGHT) -->
+  <!-- ========================================================================= -->
+  <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    
+    <!-- Small help bubble above button -->
+    <div id="chatWidgetPrompt" class="mb-2 bg-card border border-card-border p-3 rounded-brand shadow-float max-w-xs transition-all duration-200">
+      <div class="flex items-center justify-between gap-2 mb-1.5">
+        <span class="text-xs font-bold text-charcoal flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-status-success"></span>
+          Online Support
+        </span>
+        <button id="closeChatPrompt" class="text-muted hover:text-charcoal p-0.5">
+          <i data-lucide="x" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+      <p class="text-[11px] text-muted leading-tight mb-2">Have a question about setting up WhatsApp for your shop?</p>
+      <div class="flex items-center gap-2">
+        <button id="openChatPanelBtn1" class="text-[11px] font-bold text-slate-accent hover:underline">
+          Chat with us
+        </button>
+        <span class="text-muted">•</span>
+        <a href="#faq" class="text-[11px] font-semibold text-muted hover:text-charcoal">
+          Read FAQs
+        </a>
+      </div>
+    </div>
+
+    <!-- Floating Chat Panel (Toggles Open/Closed) -->
+    <div id="chatWidgetPanel" class="hidden mb-3 w-80 sm:w-96 bg-card rounded-brand border border-card-border shadow-float overflow-hidden transition-all duration-200">
+      <!-- Header -->
+      <div class="bg-charcoal text-offwhite p-4 flex items-center justify-between">
+        <div>
+          <h4 class="text-sm font-bold">Chirpdesk India Support</h4>
+          <p class="text-[11px] text-offwhite/70">Typical reply in ~3 minutes</p>
+        </div>
+        <button id="closeChatPanelBtn" class="p-1 rounded-full text-offwhite/80 hover:text-offwhite hover:bg-white/10">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Panel Body -->
+      <div class="p-4 space-y-3.5 bg-canvas/30 text-xs">
+        <div class="p-3 rounded-brand-sm bg-card border border-card-border text-charcoal">
+          <p class="font-medium">Namaste! 👋 Need help migrating your shop's number or setting up daily bullion rate alerts?</p>
+        </div>
+
+        <form id="widgetQuickLeadForm" class="space-y-2.5">
+          <div>
+            <label class="block text-[11px] font-bold text-charcoal mb-1">Your WhatsApp Number:</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-xs font-bold text-muted pointer-events-none">+91</span>
+              <input 
+                id="widgetPhoneInput"
+                type="tel" 
+                required 
+                maxlength="10"
+                placeholder="98201 54321" 
+                class="w-full pl-11 pr-3 py-2 bg-card rounded-brand-sm border border-card-border text-xs text-charcoal focus:outline-none focus:ring-1 focus:ring-slate-accent"
+              >
+            </div>
+          </div>
+
+          <div class="flex items-start gap-2 pt-1">
+            <input id="widgetConsent" type="checkbox" required checked class="mt-0.5 rounded text-slate-accent">
+            <label for="widgetConsent" class="text-[10px] text-muted leading-tight">
+              I agree to receive a test WhatsApp demo and assistance from Chirpdesk.
+            </label>
+          </div>
+
+          <button type="submit" class="w-full py-2.5 rounded-brand-sm bg-slate-accent text-offwhite font-bold text-xs hover:bg-slate-hover transition shadow-soft">
+            Start WhatsApp Chat
+          </button>
+        </form>
+
+        <div class="relative flex py-1 items-center">
+          <div class="flex-grow border-t border-card-border"></div>
+          <span class="flex-shrink mx-2 text-[10px] uppercase font-bold text-muted">or</span>
+          <div class="flex-grow border-t border-card-border"></div>
+        </div>
+
+        <a 
+          href="https://wa.me/919820154321?text=Hi%20Chirpdesk%2C%20I%20have%20a%20question%20about%20WhatsApp%20automation" 
+          target="_blank" 
+          class="w-full py-2.5 rounded-brand-sm bg-card border border-card-border text-charcoal font-bold text-xs hover:bg-sidebar transition flex items-center justify-center gap-1.5"
+        >
+          <i data-lucide="message-circle" class="w-4 h-4 text-status-success"></i>
+          <span>Message us on WhatsApp directly</span>
+        </a>
+
+        <p class="text-[10px] text-center text-muted">Mon - Sat 10:00 AM - 7:00 PM IST Support</p>
+      </div>
+    </div>
+
+    <!-- Main Round Trigger Button -->
+    <button 
+      id="mainChatTriggerBtn" 
+      aria-label="Open support chat" 
+      class="w-14 h-14 rounded-full bg-slate-accent text-offwhite flex items-center justify-center shadow-float hover:bg-slate-hover transition-transform hover:scale-105"
+    >
+      <i data-lucide="message-circle" class="w-7 h-7"></i>
+    </button>
+
+  </div>
+
+  <!-- Landing Page Script Logic -->
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // 1. Announcement Banner Close
+    const announcementBanner = document.getElementById('announcementBanner');
+    const closeBannerBtn = document.getElementById('closeBannerBtn');
+    if (closeBannerBtn && announcementBanner) {
+      closeBannerBtn.addEventListener('click', () => {
+        announcementBanner.style.display = 'none';
+      });
+    }
+
+    // 2. Mobile Nav Drawer Toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
+
+    // 3. Hero Mockup Tab Switcher
+    const tabButtons = document.querySelectorAll('.hero-tab-btn');
+    const tabContents = {
+      inbox: document.getElementById('tabContentInbox'),
+      rates: document.getElementById('tabContentRates'),
+      broadcasts: document.getElementById('tabContentBroadcasts'),
+      bot: document.getElementById('tabContentBot')
+    };
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.getAttribute('data-tab');
+        tabButtons.forEach(b => {
+          b.classList.remove('bg-slate-accent', 'text-offwhite', 'shadow-sm', 'active');
+          b.classList.add('text-charcoal');
+        });
+        btn.classList.add('bg-slate-accent', 'text-offwhite', 'shadow-sm', 'active');
+        btn.classList.remove('text-charcoal');
+
+        Object.keys(tabContents).forEach(key => {
+          if (tabContents[key]) {
+            if (key === tab) {
+              tabContents[key].classList.remove('hidden');
+            } else {
+              tabContents[key].classList.add('hidden');
+            }
+          }
+        });
+      });
+    });
+
+    // 4. Lead Capture Form Submission
+    const leadCaptureForm = document.getElementById('leadCaptureForm');
+    const leadFeedback = document.getElementById('leadFeedback');
+    if (leadCaptureForm && leadFeedback) {
+      leadCaptureForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const phone = document.getElementById('leadPhoneInput').value;
+        if (phone && phone.length === 10) {
+          leadFeedback.classList.remove('hidden');
+          leadCaptureForm.reset();
+          setTimeout(() => {
+            leadFeedback.classList.add('hidden');
+          }, 6000);
+        }
+      });
+    }
+
+    // 5. Pricing Frequency Toggle
+    const billingMonthlyBtn = document.getElementById('billingMonthlyBtn');
+    const billingAnnualBtn = document.getElementById('billingAnnualBtn');
+    const starterPrice = document.getElementById('starterPrice');
+    const starterPeriod = document.getElementById('starterPeriod');
+    const proPrice = document.getElementById('proPrice');
+    const proPeriod = document.getElementById('proPeriod');
+
+    if (billingMonthlyBtn && billingAnnualBtn) {
+      billingMonthlyBtn.addEventListener('click', () => {
+        billingMonthlyBtn.className = 'px-5 py-2 rounded-full text-xs font-bold transition-all bg-charcoal text-offwhite';
+        billingAnnualBtn.className = 'px-5 py-2 rounded-full text-xs font-bold transition-all text-charcoal hover:bg-canvas flex items-center gap-1.5';
+        if (starterPrice) starterPrice.textContent = '₹999';
+        if (starterPeriod) starterPeriod.textContent = 'per month + 18% GST';
+        if (proPrice) proPrice.textContent = '₹2,499';
+        if (proPeriod) proPeriod.textContent = 'per month + 18% GST';
+      });
+
+      billingAnnualBtn.addEventListener('click', () => {
+        billingAnnualBtn.className = 'px-5 py-2 rounded-full text-xs font-bold transition-all bg-charcoal text-offwhite flex items-center gap-1.5';
+        billingMonthlyBtn.className = 'px-5 py-2 rounded-full text-xs font-bold transition-all text-charcoal hover:bg-canvas';
+        if (starterPrice) starterPrice.textContent = '₹799';
+        if (starterPeriod) starterPeriod.textContent = 'per month, billed annually (Save 20%)';
+        if (proPrice) proPrice.textContent = '₹1,999';
+        if (proPeriod) proPeriod.textContent = 'per month, billed annually (Save 20%)';
+      });
+    }
+
+    // 6. FAQ Accordion Toggle
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    faqQuestions.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const answer = btn.nextElementSibling;
+        const icon = btn.querySelector('svg');
+        const isHidden = answer.classList.contains('hidden');
+
+        // Close all others
+        document.querySelectorAll('.faq-answer').forEach(a => a.classList.add('hidden'));
+        document.querySelectorAll('.faq-question svg').forEach(i => i.style.transform = 'rotate(0deg)');
+
+        if (isHidden) {
+          answer.classList.remove('hidden');
+          if (icon) icon.style.transform = 'rotate(180deg)';
+        }
+      });
+    });
+
+    // 7. Floating Chat Widget Interactions
+    const chatWidgetPanel = document.getElementById('chatWidgetPanel');
+    const chatWidgetPrompt = document.getElementById('chatWidgetPrompt');
+    const mainChatTriggerBtn = document.getElementById('mainChatTriggerBtn');
+    const closeChatPanelBtn = document.getElementById('closeChatPanelBtn');
+    const closeChatPrompt = document.getElementById('closeChatPrompt');
+    const openChatPanelBtn1 = document.getElementById('openChatPanelBtn1');
+
+    function toggleChatPanel() {
+      chatWidgetPanel.classList.toggle('hidden');
+      if (chatWidgetPrompt) chatWidgetPrompt.classList.add('hidden');
+    }
+
+    if (mainChatTriggerBtn) mainChatTriggerBtn.addEventListener('click', toggleChatPanel);
+    if (closeChatPanelBtn) closeChatPanelBtn.addEventListener('click', toggleChatPanel);
+    if (openChatPanelBtn1) openChatPanelBtn1.addEventListener('click', toggleChatPanel);
+    if (closeChatPrompt) {
+      closeChatPrompt.addEventListener('click', () => {
+        chatWidgetPrompt.style.display = 'none';
+      });
+    }
+
+    const widgetQuickLeadForm = document.getElementById('widgetQuickLeadForm');
+    if (widgetQuickLeadForm) {
+      widgetQuickLeadForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('Thank you! Our onboarding specialist will contact you on WhatsApp shortly.');
+        toggleChatPanel();
+      });
+    }
+  </script>
+</body>
+</html>
+
